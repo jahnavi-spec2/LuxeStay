@@ -9,8 +9,7 @@ export function ProductListing({hotels}){
 
     return(
         <>
-    <div style={{display:"grid" ,gridTemplateColumns:"repeat(3, 1fr)", gap: "30px", padding:"40px"}}>
-
+    <div className="hotel-grid">
        {  hotels.map((el) => (  
             <Hotels 
             key={el.id}
@@ -39,7 +38,7 @@ export function Hotels({name,thumbnail,des,price,rating,location,photos}){
     const [currentImg, setcurrentImg]=useState(images[0]);
     return(
         <>
-        <div style={{ border:"2px solid", borderRadius:"10px", overflow:"hidden", padding:"10px 15px",gap:"20px"}}>
+        <div className="hotel-card">
              <div style={{ position: "relative" }}>
                 <img width="100%" height="250px" src={thumbnail} alt="img"/>
                
@@ -53,11 +52,11 @@ export function Hotels({name,thumbnail,des,price,rating,location,photos}){
                     </button>
             
              </div>
-             <div style={{display: "grid",gridTemplate:"columns",textAlign:"left",border:"none "}}>
-   <h1>{name}</h1>
+             <div className="hotel-content">
+   <h1 >{name}</h1>
    <h2>Location: {location}</h2>
-   <h2>Price: {price}</h2>
-    <h2>Rating: {rating}</h2>
+   <h3>Price: Rs {price}/day</h3>
+    <h3>Rating: {rating} ⭐</h3>
     <button className="viewMoreBtn"  onClick={()=> setShowDescription(!showDescription)} >View More</button>
 
      {showDescription && <p>{des}</p>}
@@ -119,18 +118,12 @@ return (
 
       {/* content */}
       <div style={{ zIndex: 2, textAlign: "center" }}>
-        <h1 style={{ fontSize: "60px", marginBottom: "20px" }}>
-          EXPERIENCE LUXURY LIKE NEVER BEFORE
+        <h1 className="hero-title" >
+          EXPERIENCE LUXURY LIKE NEVER BEFORE 
         </h1>
 
-        <button
-          style={{
-            padding: "12px 25px",
-            border: "2px solid gold",
-            background: "transparent",
-            color: "white",
-            cursor: "pointer",
-          }}
+        <button className="hero-btn"
+        
         >
           EXPLORE HOTEL PRUDENCE
         </button>
