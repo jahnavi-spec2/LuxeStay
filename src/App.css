@@ -427,5 +427,34 @@ background-color: gold;
 }
 
 
+.pagination{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    margin:40px 0;
+    flex-wrap:wrap;
+}
 
+
+
+.pagination button{
+
+    min-width:45px;
+    height:45px;
+
+    border:none;
+    border-radius:8px;
+
+    cursor:pointer;
+
+    background:#1a1a1a;
+    color:white;
+
+    font-size:16px;
+    font-weight:600;
+
+    transition:.3s;
+}
 

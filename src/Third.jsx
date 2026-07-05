@@ -34,19 +34,52 @@ export function Hotels({name,thumbnail,des,price,rating,location,photos}){
 
     const [showDescription, setShowDescription]= useState(false);
     let images=[thumbnail,...photos]
-    const [currentImg, setcurrentImg]=useState(images[0]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+
+    useEffect(() => {
+
+    const interval = setInterval(() => {
+
+        setCurrentIndex((prev) =>
+            (prev + 1) % images.length
+        );
+
+    }, 2000);
+     return () => clearInterval(interval);
+
+}, [images.length]);
+
+    const nextImage=()=>{
+
+      setCurrentIndex((prev)=>
+        (prev+1)% images.length
+      );
+    };
+
+    const previousImage = () => {
+
+    setCurrentIndex((prev) =>
+        prev === 0
+            ? images.length - 1
+            : prev - 1
+    );
+
+};
+
+
     return(
         <>
         <div className="hotel-card">
              <div style={{ position: "relative" }}>
-                <img width="100%" height="250px" src={currentImg} alt="img"/>
+                <img width="100%" height="250px" src={images[currentIndex]} alt={name}/>
                
-                    <button className="leftBtn">
+                    <button className="leftBtn" onClick={previousImage}>
                     <FaChevronLeft />
                     </button>
                
                 
-                    <button className="rightBtn">
+                    <button className="rightBtn" onClick={nextImage}>
                     <FaChevronRight />
                     </button>
             
@@ -139,8 +172,11 @@ export function CategoriesSection({hotels,currentLocation,setCurrentLocation}){
 <>
 <div className="categories">
   {categories.map((category)=> (
-     <button className="category-btn" onClick="" key={category} onClick={() => setCurrentLocation(category)}>{category}</button>
-  ))}
+     <button className="category-btn"  key={category} 
+     onClick={() =>  {
+     setCurrentLocation(category);
+    setCurrentPage(1)}} >{category}</button>
+     ))}
 </div>
 </>
 
