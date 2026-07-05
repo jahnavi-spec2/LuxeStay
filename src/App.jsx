@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 
-import { ProductListing , Hero} from './Third';
+import { ProductListing , Hero, CategoriesSection} from './Third';
 
 function App() {
 
@@ -17,15 +17,24 @@ const [hotels,setHotels]=useState([]);
   useEffect(()=>{
 fetchHotels();
   },[]);
+
+
+  const [currentLocation, setCurrentLocation]=useState("All");
+  
+    const filteredHotels =
+    currentLocation === "All"
+      ? hotels
+      : hotels.filter(hotel => hotel.location === currentLocation);
+  
  
   return (
 
 
     <>
   
-     
   <Hero hotels={hotels}/>
-      <ProductListing hotels={hotels}/>
+       <CategoriesSection hotels={hotels} currentLocation={currentLocation}    setCurrentLocation={setCurrentLocation} />
+      <ProductListing  filteredHotels={filteredHotels}/>
     </>
   )
 }

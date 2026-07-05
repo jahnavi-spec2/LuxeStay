@@ -3,14 +3,12 @@ import { useEffect, useState } from 'react'
 import { BsJustifyLeft } from 'react-icons/bs';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-export function ProductListing({hotels}){
-
+export function ProductListing({filteredHotels}){
   
-
     return(
         <>
     <div className="hotel-grid">
-       {  hotels.map((el) => (  
+       {  filteredHotels.map((el) => (  
             <Hotels 
             key={el.id}
             name={el.name} 
@@ -33,6 +31,7 @@ export function ProductListing({hotels}){
 
 export function Hotels({name,thumbnail,des,price,rating,location,photos}){
 
+
     const [showDescription, setShowDescription]= useState(false);
     let images=[thumbnail,...photos]
     const [currentImg, setcurrentImg]=useState(images[0]);
@@ -40,7 +39,7 @@ export function Hotels({name,thumbnail,des,price,rating,location,photos}){
         <>
         <div className="hotel-card">
              <div style={{ position: "relative" }}>
-                <img width="100%" height="250px" src={thumbnail} alt="img"/>
+                <img width="100%" height="250px" src={currentImg} alt="img"/>
                
                     <button className="leftBtn">
                     <FaChevronLeft />
@@ -57,7 +56,7 @@ export function Hotels({name,thumbnail,des,price,rating,location,photos}){
    <h2>Location: {location}</h2>
    <h3>Price: Rs {price}/day</h3>
     <h3>Rating: {rating} ⭐</h3>
-    <button className="viewMoreBtn"  onClick={()=> setShowDescription(!showDescription)} >View More</button>
+    <button className="viewMoreBtn"  onClick={()=> {setShowDescription(!showDescription) }} >{showDescription? "View Less": "View More"}</button>
 
      {showDescription && <p>{des}</p>}
 
@@ -130,4 +129,20 @@ return (
       </div>
     </div>
   );
+}
+
+
+export function CategoriesSection({hotels,currentLocation,setCurrentLocation}){
+  const categories=["All",...new Set(hotels.map(hotel=> hotel.location))];
+
+  return(
+<>
+<div className="categories">
+  {categories.map((category)=> (
+     <button className="category-btn" onClick="" key={category} onClick={() => setCurrentLocation(category)}>{category}</button>
+  ))}
+</div>
+</>
+
+  )
 }
