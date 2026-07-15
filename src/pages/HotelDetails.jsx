@@ -1,0 +1,258 @@
+import React from 'react'
+import { FaChevronLeft, FaChevronRight, FaWifi, FaSnowflake, FaParking, FaMapMarkerAlt } from "react-icons/fa";
+import {useParams} from "react-router-dom"
+
+import { useState, useEffect } from "react";
+
+const amenities = {
+  "Popular with Guests": [
+    "Housekeeping",
+    "In-room Dining",
+    "Iron/Ironing Board",
+    "Wi-Fi",
+    "Room Service",
+    "Bathroom",
+    "Air Conditioning",
+    "Mineral Water"
+  ],
+
+  "Room Features": [
+    "Charging Points",
+    "Closet",
+    "Seating Area",
+    "Mini Fridge",
+    "Work Desk",
+    "Blackout Curtains",
+    "Telephone"
+  ],
+
+  "Basic Facilities": [
+    "Kettle"
+  ],
+
+  "Childcare": [
+    "Child safety socket covers"
+  ],
+
+  "Safety and Security": [
+    "Electronic Safe"
+  ],
+
+  "Media and Entertainment": [
+    "TV"
+  ],
+
+  "Kitchen and Appliances": [
+    "Refrigerator"
+  ],
+
+  "Bathroom": [
+    "Shaving Mirror",
+    "Hairdryer",
+    "Dental Kit",
+    "Toiletries",
+    "Western Toilet Seat",
+    "Shower Cubicle",
+    "Hot & Cold Water"
+  ],
+
+  "Other Facilities": [
+    "Fan"
+  ]
+};
+
+function ratingLabel(rating) {
+  if (rating >= 4.5) return { text: "Excellent", cls: "rating-great" };
+  if (rating >= 3.5) return { text: "Very Good", cls: "rating-good" };
+  if (rating >= 2.5) return { text: "Average", cls: "rating-avg" };
+  return { text: "Below Average", cls: "rating-low" };
+}
+
+
+
+function HotelDetails({hotels}) {
+const { id } = useParams();
+  const [currentIndex, setCurrentIndex] = useState(0);
+   const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
+  const [guests, setGuests] = useState(2);
+  const hotel = hotels.find((h) => String(h.id) === id);
+    const [showAllAmenities,setShowAllAmenities]=useState(false);
+
+  useEffect(() => {
+    setCurrentIndex(0);
+    setShowAllAmenities(false);
+  }, [id]);
+
+  if (!hotel) {
+  return <h2>Loading...</h2>;
+}
+    const images=[hotel.thumbnail,...hotel.photos]
+
+        const nextImage=()=>{
+    
+          setCurrentIndex((prev)=>
+            (prev+1)% images.length
+          );
+        };
+    
+        const previousImage = () => {
+    
+        setCurrentIndex((prev) =>
+            prev === 0
+                ? images.length - 1
+                : prev - 1
+        );
+    
+    };
+
+   const amenityEntries = Object.entries(amenities);
+  const visibleEntries = showAllAmenities ? amenityEntries : amenityEntries.slice(0, 2);
+
+  const rating = ratingLabel(hotel.rating);
+
+  const handleBookNow = () => {
+    if (checkIn === "" || checkOut === "") {
+      alert("Please select check-in and check-out dates.");
+      return;
+    }
+
+    alert("Booking request sent for " + hotel.name);
+  };
+
+
+  return (
+    <div  className="hotelDetail">
+<div className="hotelDetailImg" style={{position: "relative"}}>
+<img src={images[currentIndex]} width="100%" alt={hotel.name}/>
+
+ <button className="leftBtn" onClick={previousImage}>
+                    <FaChevronLeft />
+                    </button>
+               
+                
+                    <button className="rightBtn" onClick={nextImage}>
+                    <FaChevronRight />
+                    </button>
+
+</div>
+
+<div className="gridHotelImg">
+ {images.map((image, i)=>(
+     <div className="imggrid" key={i} onClick={() => setCurrentIndex(i)}>
+<img src={image} width={"90px"} height={"60px"} alt={`${hotel.name} ${i + 1}`}/>
+
+    </div>
+ ))
+}
+  
+</div>
+
+      {/* main content + sticky booking sidebar sit side by side */}
+      <div className="hotelDetailLayout">
+
+      <div className="hotelDetailContent">
+        <div className="titleRow">
+          <div>
+        <h1>{hotel.name}</h1>
+        <p className="locationLine">
+                <FaMapMarkerAlt /> {hotel.location}
+              </p>  
+              </div>
+
+              <h3>Price: Rs {hotel.price}/day</h3>
+        <span className={`ratingBadge ${rating.cls}`}>{hotel.rating} ⭐ {rating.text}</span>
+        </div>
+        <div className="quickAmenities">
+          <span className="pill">
+            <FaWifi /> Free Wi-Fi
+          </span>
+          <span className="pill">
+            <FaParking /> Parking
+          </span>
+
+          <span className="pill">
+            <FaSnowflake /> Air Conditioning
+          </span>
+
+        </div>
+<hr/>
+<h2> More Information</h2>
+        <p>{hotel.description}</p>
+<hr/>
+<div className="amenities">
+        <h2>Amenities</h2>
+        {visibleEntries.map(([category,items])=>(
+          <div key={category} className="amenity-section">
+
+      <h3>{category}</h3>
+
+      <ul>
+
+        {items.map((item) => (
+
+          <li key={item}>
+            • {item}
+          </li>
+         
+        ))}
+         </ul>
+        </div>
+        ))}
+
+        <button className="toggleAmenities" onClick={()=> setShowAllAmenities((p)=> !p)}>
+          {showAllAmenities?"Show less":"Show all categories"}
+        </button>
+
+    </div>
+
+
+    <hr/>
+    
+     </div>
+
+
+      {/* side bar booking system */}
+      <aside className="bookingSidebar">
+ <p className="sidebarPrice">
+            Rs {hotel.price} <span>/ night</span>
+          </p>
+ 
+          <label className="sidebarLabel">Check-in</label>
+          <input
+            type="date"
+            value={checkIn}
+            onChange={(e) => setCheckIn(e.target.value)}
+          />
+ 
+          <label className="sidebarLabel">Check-out</label>
+          <input
+            type="date"
+            value={checkOut}
+            onChange={(e) => setCheckOut(e.target.value)}
+          />
+
+
+          <label className="sidebarLabel">Guests</label>
+<select value={guests} onChange={(e) => setGuests(e.target.value)}>
+  <option value="1">1 guest</option>
+  <option value="2">2 guests</option>
+  <option value="3">3 guests</option>
+  <option value="4">4 guests</option>
+  <option value="5">5 guests</option>
+  <option value="6">6 guests</option>
+</select>
+
+<button className="bookNowBtn" onClick={handleBookNow}>
+  Book now
+</button>
+      </aside>
+
+      </div>
+
+        </div>
+       
+)}
+
+  
+export default HotelDetails

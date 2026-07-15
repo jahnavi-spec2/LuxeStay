@@ -185,7 +185,7 @@
     border-right-color: var(--border);
   }
 }
-.viewMoreBtn {
+.viewDetails {
     background: white;
     display:flex;
     align-items: center;
@@ -200,7 +200,7 @@
   transition: all 0.3s ease;
 }
 
-.viewMoreBtn:hover {
+.viewDetails:hover {
   background: #0d6efd;
   color: white;
 }
@@ -303,10 +303,14 @@
 
 
 .hero-title {
+ 
   font-family:"Tagesschrift",serif;
 
-  font-size: 60px;
+  font-size: 50px;
+  z-index:50;
+ gap:15px;
   text-align: center;
+  line-height: 1.2;
 }
 
 .hero-btn {
@@ -458,3 +462,256 @@ background-color: gold;
     transition:.3s;
 }
 
+.amenities{
+    margin-top:40px;
+}
+
+.amenity-section{
+    margin-bottom:30px;
+}
+
+.amenity-section h3{
+    margin-bottom:10px;
+    color:#3dbaeb;
+    gap:40px;
+}
+
+.amenity-section ul{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: left;
+    align-items:left;
+    gap:12px 40px;
+    list-style:none;
+    padding:0;
+}
+
+.amenity-section li{
+    width:250px;
+    font-size:16px;
+}
+
+.hotelDetailContent {
+display:flex;
+flex-direction: column;
+}
+
+.hotelDetailImg{
+width:100%;
+height: 400px;
+overflow:hidden;
+
+}
+.hotelDetailImg img{
+  width:100%;
+  height:100%;
+   object-fit: cover;
+}
+.hotelDetail{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content: left;
+  
+}
+
+
+
+/* ---------- Layout shell ---------- */
+.hotelDetail {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.hotelDetailLayout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+@media (max-width: 800px) {
+  .hotelDetailLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Main image + arrows ---------- */
+.hotelDetailImg img {
+  border-radius: 12px;
+  max-height: 420px;
+  object-fit: cover;
+}
+
+.leftBtn, .rightBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+.leftBtn { left: 12px; }
+.rightBtn { right: 12px; }
+
+/* ---------- Thumbnail grid (gridHotelImg / imggrid) ---------- */
+.gridHotelImg {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  overflow-x: auto;
+}
+
+.imggrid {
+  cursor: pointer;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  opacity: 0.7;
+}
+.imggrid:hover {
+  opacity: 1;
+}
+.imggrid img {
+  display: block;
+  object-fit: cover;
+}
+
+/* ---------- Title row + rating badge ---------- */
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.locationLine {
+  color: #666;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ratingBadge {
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.rating-great { background: #e0f5ea; color: #0f6e56; }
+.rating-good  { background: #eaf3de; color: #3b6d11; }
+.rating-avg   { background: #faeeda; color: #854f0b; }
+.rating-low   { background: #fcebeb; color: #a32d2d; }
+
+/* ---------- Quick amenity pills ---------- */
+.quickAmenities {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 6px 12px;
+  color: #444;
+}
+
+/* ---------- Amenities ---------- */
+.amenity-section {
+  margin-bottom: 14px;
+}
+.amenity-section h3 {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+.amenity-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 4px 12px;
+  font-size: 14px;
+  color: #555;
+}
+
+.toggleAmenities {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+.toggleAmenities:hover {
+  background: #f5f5f5;
+}
+
+/* ---------- Sticky booking sidebar ---------- */
+.bookingSidebar {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 18px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+  background: #fff;
+}
+
+.sidebarPrice {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+.sidebarPrice span {
+  font-size: 13px;
+  font-weight: 400;
+  color: #777;
+}
+
+.sidebarLabel {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin: 10px 0 4px;
+}
+
+.bookingSidebar input,
+.bookingSidebar select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.bookNowBtn {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  background: #d85a30;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.bookNowBtn:hover {
+  background: #b8471f;
+}

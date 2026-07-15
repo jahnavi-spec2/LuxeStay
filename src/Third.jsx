@@ -1,7 +1,6 @@
 
 import { useEffect, useState } from 'react'
-import { BsJustifyLeft } from 'react-icons/bs';
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export function ProductListing({filteredHotels}){
   
@@ -11,6 +10,7 @@ export function ProductListing({filteredHotels}){
        {  filteredHotels.map((el) => (  
             <Hotels 
             key={el.id}
+            id={el.id}
             name={el.name} 
             thumbnail={el.thumbnail}
             des={el.description}
@@ -29,10 +29,9 @@ export function ProductListing({filteredHotels}){
 
 
 
-export function Hotels({name,thumbnail,des,price,rating,location,photos}){
+export function Hotels({id,name,thumbnail,des,price,rating,location,photos}){
 
-
-    const [showDescription, setShowDescription]= useState(false);
+const navigate = useNavigate();
     let images=[thumbnail,...photos]
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -45,27 +44,12 @@ export function Hotels({name,thumbnail,des,price,rating,location,photos}){
             (prev + 1) % images.length
         );
 
-    }, 2000);
+    }, 4500);
      return () => clearInterval(interval);
 
 }, [images.length]);
 
-    const nextImage=()=>{
 
-      setCurrentIndex((prev)=>
-        (prev+1)% images.length
-      );
-    };
-
-    const previousImage = () => {
-
-    setCurrentIndex((prev) =>
-        prev === 0
-            ? images.length - 1
-            : prev - 1
-    );
-
-};
 
 
     return(
@@ -74,14 +58,7 @@ export function Hotels({name,thumbnail,des,price,rating,location,photos}){
              <div style={{ position: "relative" }}>
                 <img width="100%" height="250px" src={images[currentIndex]} alt={name}/>
                
-                    <button className="leftBtn" onClick={previousImage}>
-                    <FaChevronLeft />
-                    </button>
-               
-                
-                    <button className="rightBtn" onClick={nextImage}>
-                    <FaChevronRight />
-                    </button>
+                   
             
              </div>
              <div className="hotel-content">
@@ -89,9 +66,10 @@ export function Hotels({name,thumbnail,des,price,rating,location,photos}){
    <h2>Location: {location}</h2>
    <h3>Price: Rs {price}/day</h3>
     <h3>Rating: {rating} ⭐</h3>
-    <button className="viewMoreBtn"  onClick={()=> {setShowDescription(!showDescription) }} >{showDescription? "View Less": "View More"}</button>
+          <p>{des.length>80 ? des.substring(0,80)+ "..." : des}</p>
 
-     {showDescription && <p>{des}</p>}
+    <button className="viewDetails" onClick={()=> navigate(`/hotel/${id}`)} > View Details</button>
+
 
 
              </div>
@@ -165,7 +143,7 @@ return (
 }
 
 
-export function CategoriesSection({hotels,currentLocation,setCurrentLocation}){
+export function CategoriesSection({hotels,currentLocation,setCurrentLocation,setCurrentPage}){
   const categories=["All",...new Set(hotels.map(hotel=> hotel.location))];
 
   return(

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-
+import {Routes,Route} from "react-router-dom"
 import { Pagination } from "./Pagination";
 import { ProductListing, Hero, CategoriesSection } from './Third';
-
+import Home from "./pages/Home";
+import HotelDetails from "./pages/HotelDetails";
 function App() {
 
   const [hotels, setHotels] = useState([]);
@@ -44,23 +45,27 @@ function App() {
   const paginatedHotels = filteredHotels.slice(startIndex, endIndex);
 
   return (
-    <>
-      <Hero hotels={hotels} />
+    
 
-      <CategoriesSection
-        hotels={hotels}
-        currentLocation={currentLocation}
-        setCurrentLocation={setCurrentLocation}
-      />
+    <Routes>
 
-      <ProductListing filteredHotels={paginatedHotels} />
+      <Route path="/" element={
+        <Home
+      
+            hotels={hotels}
+              currentLocation={currentLocation}
+              setCurrentLocation={setCurrentLocation}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+              paginatedHotels={paginatedHotels}/>}/>
 
-      <Pagination
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        totalPages={totalPages}
-      />
-    </>
+      <Route path="/hotel/:id" element={
+      <HotelDetails
+      hotels={hotels}/>}/>
+    </Routes>
+    
+    
   );
 }
 
