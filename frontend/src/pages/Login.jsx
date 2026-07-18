@@ -1,29 +1,43 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { validateEmail } from '../utils/helper';
+import { useAuth } from '../context/AuthContext';
+
 
 function Login() {
+   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState('');
   const [isShowPassword, setIsShowPassword] = useState(false);
-
+ const { login } = useAuth();
   const togglePasswordVisibility = () => setIsShowPassword((prev) => !prev);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-    if (!email || !password || !username) {
+    if (!password || (!email && !username)) {
       setError("Please fill in all the fields");
       return;
     }
-    if (!validateEmail(email)) {
+    if (email && !validateEmail(email)) {
       setError("Invalid email");
       return;
     }
-    // TODO: call your login API here
-    alert("Login request sent for " + username);
+    
+    // alert("Login request sent for " + username);
+
+  setLoading(true);
+    try {
+      await login({ email, username, password });
+      const redirectTo = location.state?.from || "/";
+      navigate(redirectTo);
+    } catch (err) {
+      setError(err.message);
+    }
+ setLoading(false);
+
   };
 
   return (
@@ -58,7 +72,8 @@ function Login() {
             </button>
           </div>
 
-          <button className="authSubmit" type="submit">Log In</button>
+          <button className="authSubmit" type="submit"disabled={loading}>
+            {loading ? "Logging in..." : "Log In"}</button>
         </form>
 
         <p className="authSwitch">

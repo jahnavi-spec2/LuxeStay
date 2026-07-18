@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { validateEmail } from '../utils/helper';
+import { useAuth } from '../context/AuthContext';
 
 function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const { signup } = useAuth();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -35,8 +37,16 @@ function Signup() {
       return;
     }
 
-    // TODO: replace with your real signup API call
-    alert("Account created for " + username);
+  
+      setLoading(true);
+    try {
+      await signup({ username, email, password });
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

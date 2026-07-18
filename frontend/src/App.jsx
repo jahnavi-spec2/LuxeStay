@@ -7,6 +7,9 @@ import Home from "./pages/Home";
 import HotelDetails from "./pages/HotelDetails";
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import { AuthProvider } from "./context/AuthContext";
+import Navbar from "./Navbar";
+
 function App() {
 
   const [hotels, setHotels] = useState([]);
@@ -47,9 +50,10 @@ function App() {
   const paginatedHotels = filteredHotels.slice(startIndex, endIndex);
 
   return (
-    
+    <AuthProvider>
+      <NavBar>
 
-    <Routes>
+<Routes>
 
       <Route path="/" element={
         <Home
@@ -71,6 +75,11 @@ function App() {
             <Route path="/signup" element={<Signup/>} ></Route>
 
     </Routes>
+    
+
+      </NavBar>
+    </AuthProvider>
+
     
     
   );

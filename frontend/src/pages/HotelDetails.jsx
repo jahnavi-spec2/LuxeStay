@@ -1,8 +1,9 @@
 import React from 'react'
 import { FaChevronLeft, FaChevronRight, FaWifi, FaSnowflake, FaParking, FaMapMarkerAlt } from "react-icons/fa";
-import {useParams} from "react-router-dom"
-
+import {useParams,useNavigate} from "react-router-dom"
+import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
+import { createBooking } from "../utils/api";
 
 const amenities = {
   "Popular with Guests": [
@@ -72,10 +73,15 @@ function ratingLabel(rating) {
 
 function HotelDetails({hotels}) {
 const { id } = useParams();
+const navigate=useNavigate();
+const { user } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(0);
    const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingError, setBookingError] = useState("");
+  const [bookingSuccess, setBookingSuccess] = useState(false);
   const hotel = hotels.find((h) => String(h.id) === id);
     const [showAllAmenities,setShowAllAmenities]=useState(false);
 
@@ -112,13 +118,46 @@ const { id } = useParams();
   const rating = ratingLabel(hotel.rating);
 
   const handleBookNow = () => {
+
+    setBookingError("");
+    setBookingLoading(false);
     if (checkIn === "" || checkOut === "") {
-      alert("Please select check-in and check-out dates.");
+      setBookingError("Please select check-in and check-out dates.");
       return;
     }
 
-    alert("Booking request sent for " + hotel.name);
+    // alert("Booking request sent for " + hotel.name);
+    if(new Date(checkOut)<=new Date(checkIn))
+    {
+      setBookingError("Check-out date can't be before check-Inn")
+      return;
+    }
+// if not logged-in,,,navigate back to hoem
+      if (!user) {
+      navigate("/login", { 
+        state: { from: `/hotel/${id}` } });
+      return;
+    }
   };
+  
+  setBookingLoading(true);
+
+  try{
+await createBooking({
+  hotelId: String(hotel.id),
+  hotelName: hotel.name,
+  hotelLocation: hotel.location,
+  hotelThumbnail:hotel.thumbnail,
+  pricePerNight:hotel.price,
+  checkIn,checkOut,guests
+})
+  } 
+  catch(err){
+setBookingError(err.message);
+  }
+
+  setBookingLoading(false);
+}
 
 
   return (
@@ -242,8 +281,13 @@ const { id } = useParams();
   <option value="6">6 guests</option>
 </select>
 
-<button className="bookNowBtn" onClick={handleBookNow}>
-  Book now
+
+{bookingError && <p className="auth-error">{bookingError}</p>}
+{bookingSuccess && <p className="booking-success">Booking confirmed!</p>}
+
+
+<button className="bookNowBtn" onClick={handleBookNow} disabled={bookingLoading}>
+  {bookingLoading ? "Booking..." : "Book now"}
 </button>
       </aside>
 
@@ -251,7 +295,7 @@ const { id } = useParams();
 
         </div>
        
-)}
+)
 
   
 export default HotelDetails
