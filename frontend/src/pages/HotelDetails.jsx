@@ -148,7 +148,6 @@ const { id } = useParams();
   
 </div>
 
-      {/* main content + sticky booking sidebar sit side by side */}
       <div className="hotelDetailLayout">
 
       <div className="hotelDetailContent">

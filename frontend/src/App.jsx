@@ -5,6 +5,8 @@ import { Pagination } from "./Pagination";
 import { ProductListing, Hero, CategoriesSection } from './Third';
 import Home from "./pages/Home";
 import HotelDetails from "./pages/HotelDetails";
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 function App() {
 
   const [hotels, setHotels] = useState([]);
@@ -63,6 +65,11 @@ function App() {
       <Route path="/hotel/:id" element={
       <HotelDetails
       hotels={hotels}/>}/>
+
+
+      <Route path="/login" element={<Login/>} ></Route>
+            <Route path="/signup" element={<Signup/>} ></Route>
+
     </Routes>
     
     
