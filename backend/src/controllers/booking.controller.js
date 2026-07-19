@@ -1,7 +1,7 @@
 import Booking from "../models/booking.model.js";
-import asyncHandler from "../utils/asyncHandler.js";
-import ApiError from "../utils/ApiError.js";
-import ApiResponse from "../utils/ApiResponse.js";
+import asyncHandler from "../utils/AsyncHandler.js";
+import ApiError from "../utils/Apierror.js";
+import ApiResponse from "../utils/Apiresponse.js";
 
 // Helper: number of nights between two dates (min 1)
 function nightsBetween(checkIn, checkOut) {
