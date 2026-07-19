@@ -2,20 +2,21 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import {Routes,Route} from "react-router-dom"
 import { Pagination } from "./Pagination";
-import { ProductListing, Hero, CategoriesSection } from './Third';
+import { ProductListing, Hero, CategoriesSection, SortBar } from './Third';
 import Home from "./pages/Home";
 import HotelDetails from "./pages/HotelDetails";
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import MyBookings from './pages/MyBookings';
 import { AuthProvider } from "./context/AuthContext";
-import Navbar from "./Navbar";
-
+import Navbar from "./navBar";
+import Footer from  "./Footer"
 function App() {
 
   const [hotels, setHotels] = useState([]);
   const [currentLocation, setCurrentLocation] = useState("All");
+  const [sortBy, setSortBy] = useState("default");
 
-  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const hotelsPerPage = 6;
 
@@ -30,58 +31,65 @@ function App() {
     fetchHotels();
   }, []);
 
-  // Location Filter
   const filteredHotels =
     currentLocation === "All"
       ? hotels
       : hotels.filter(hotel => hotel.location === currentLocation);
 
-  // Reset page whenever category changes
+  const sortedHotels = [...filteredHotels].sort((a, b) => {
+    switch (sortBy) {
+      case "price-low":
+        return a.price - b.price;
+      case "price-high":
+        return b.price - a.price;
+      case "rating":
+        return b.rating - a.rating;
+      default:
+        return 0;
+    }
+  });
+
   useEffect(() => {
     setCurrentPage(1);
-  }, [currentLocation]);
+  }, [currentLocation, sortBy]);
 
-  // Pagination
-  const totalPages = Math.ceil(filteredHotels.length / hotelsPerPage);
+  const totalPages = Math.ceil(sortedHotels.length / hotelsPerPage);
 
   const startIndex = (currentPage - 1) * hotelsPerPage;
   const endIndex = startIndex + hotelsPerPage;
 
-  const paginatedHotels = filteredHotels.slice(startIndex, endIndex);
+  const paginatedHotels = sortedHotels.slice(startIndex, endIndex);
 
   return (
     <AuthProvider>
-      <NavBar>
+      <Navbar />
 
-<Routes>
+      <Routes>
 
-      <Route path="/" element={
-        <Home
-      
+        <Route path="/" element={
+          <Home
             hotels={hotels}
-              currentLocation={currentLocation}
-              setCurrentLocation={setCurrentLocation}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              totalPages={totalPages}
-              paginatedHotels={paginatedHotels}/>}/>
+            currentLocation={currentLocation}
+            setCurrentLocation={setCurrentLocation}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
+            paginatedHotels={paginatedHotels}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />}/>
 
-      <Route path="/hotel/:id" element={
-      <HotelDetails
-      hotels={hotels}/>}/>
+        <Route path="/hotel/:id" element={
+        <HotelDetails
+        hotels={hotels}/>}/>
 
+        <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<Signup/>} />
+        <Route path="/my-bookings" element={<MyBookings/>} />
 
-      <Route path="/login" element={<Login/>} ></Route>
-            <Route path="/signup" element={<Signup/>} ></Route>
-
-    </Routes>
-    
-
-      </NavBar>
+      </Routes>
+        <Footer />
     </AuthProvider>
-
-    
-    
   );
 }
 

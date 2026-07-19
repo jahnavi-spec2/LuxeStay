@@ -1,29 +1,43 @@
 import React from 'react'
-import {Hero, ProductListing, CategoriesSection,} from "../Third.jsx";
-
+import { Hero, ProductListing, CategoriesSection, SortBar } from "../Third.jsx";
+import { useRef } from 'react';
 import { Pagination } from "../Pagination";
-function Home({hotels,currentLocation,setCurrentLocation,currentPage,setCurrentPage,totalPages,paginatedHotels}) {
+
+function Home({
+  hotels, currentLocation, setCurrentLocation,
+  currentPage, setCurrentPage, totalPages, paginatedHotels,
+  sortBy, setSortBy
+}) {
+
+  const hotelSectionRef = useRef(null);
+
+  const scrollToHotels = () => {
+    hotelSectionRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-  <>
-  
-  <Hero hotels={hotels} />
+    <>
+      <Hero hotels={hotels} onExplore={scrollToHotels} />
 
-      <CategoriesSection
-        hotels={hotels}
-        currentLocation={currentLocation}
-        setCurrentLocation={setCurrentLocation}
-        setCurrentPage={setCurrentPage}
-      />
+      <div ref={hotelSectionRef}>
+        <CategoriesSection
+          hotels={hotels}
+          currentLocation={currentLocation}
+          setCurrentLocation={setCurrentLocation}
+          setCurrentPage={setCurrentPage}
+        />
 
-      <ProductListing filteredHotels={paginatedHotels} />
+        <SortBar sortBy={sortBy} setSortBy={setSortBy} setCurrentPage={setCurrentPage} />
 
-      <Pagination
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        totalPages={totalPages}
-      />
-  
-  </>
+        <ProductListing filteredHotels={paginatedHotels} />
+
+        <Pagination
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+        />
+      </div>
+    </>
   )
 }
 

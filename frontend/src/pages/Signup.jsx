@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { validateEmail } from '../utils/helper';
 import { useAuth } from '../context/AuthContext';
 
 function Signup() {
+ const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const { signup } = useAuth();
@@ -11,6 +12,7 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [error, setError] = useState("");
+ const [loading,setLoading]=useState(false)
 
   const togglePasswordVisibility = () => {
     setIsShowPassword((prev) => !prev);

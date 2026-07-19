@@ -83,7 +83,7 @@ const navigate = useNavigate();
 
 
 
-export function Hero({hotels}){
+export function Hero({hotels,onExplore}){
    const [index,setIndex]=useState(0);
 
 
@@ -133,7 +133,7 @@ return (
         </h1>
 
         <button className="hero-btn"
-        
+        onClick={onExplore}
         >
           EXPLORE HOTEL PRUDENCE
         </button>
@@ -159,4 +159,34 @@ export function CategoriesSection({hotels,currentLocation,setCurrentLocation,set
 </>
 
   )
+}
+
+
+export function SortBar({ sortBy, setSortBy, setCurrentPage }) {
+  const options = [
+    { value: "default", label: "Recommended" },
+    { value: "price-low", label: "Price: Low to High" },
+    { value: "price-high", label: "Price: High to Low" },
+    { value: "rating", label: "Rating: High to Low" },
+  ];
+
+  return (
+    <div className="sortBar">
+      <span className="sortLabel">Sort by</span>
+      <select
+        className="sortSelect"
+        value={sortBy}
+        onChange={(e) => {
+          setSortBy(e.target.value);
+          setCurrentPage(1);
+        }}
+      >
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
 }

@@ -24,7 +24,6 @@ export function Pagination({
   return (
     <div className="pagination">
 
-      {/* Previous Group */}
       <button
         disabled={startPage === 1}
         onClick={() =>
@@ -34,7 +33,7 @@ export function Pagination({
         Prev
       </button>
 
-      {/* Page Numbers */}
+   
       {pageNumbers.map((page) => (
         <button
           key={page}
@@ -49,7 +48,7 @@ export function Pagination({
         </button>
       ))}
 
-      {/* Next Group */}
+     
       <button
         disabled={endPage === totalPages}
         onClick={() =>

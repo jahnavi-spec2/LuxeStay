@@ -73,7 +73,7 @@ function ratingLabel(rating) {
 
 function HotelDetails({hotels}) {
 const { id } = useParams();
-const navigate=useNavigate();
+const navigate = useNavigate();
 const { user } = useAuth();
   const [currentIndex, setCurrentIndex] = useState(0);
    const [checkIn, setCheckIn] = useState("");
@@ -117,47 +117,48 @@ const { user } = useAuth();
 
   const rating = ratingLabel(hotel.rating);
 
-  const handleBookNow = () => {
-
+  
+  const handleBookNow = async () => {
     setBookingError("");
-    setBookingLoading(false);
+    setBookingSuccess(false);
+
     if (checkIn === "" || checkOut === "") {
       setBookingError("Please select check-in and check-out dates.");
       return;
     }
 
-    // alert("Booking request sent for " + hotel.name);
-    if(new Date(checkOut)<=new Date(checkIn))
-    {
-      setBookingError("Check-out date can't be before check-Inn")
+    if (new Date(checkOut) <= new Date(checkIn)) {
+      setBookingError("Check-out date can't be before check-in");
       return;
     }
-// if not logged-in,,,navigate back to hoem
-      if (!user) {
-      navigate("/login", { 
-        state: { from: `/hotel/${id}` } });
+
+    if (!user) {
+      navigate("/login", { state: { from: `/hotel/${id}` } });
       return;
+    }
+
+    setBookingLoading(true);
+    try {
+      await createBooking({
+        hotelId: String(hotel.id),
+        hotelName: hotel.name,
+        hotelLocation: hotel.location,
+        hotelThumbnail: hotel.thumbnail,
+        pricePerNight: hotel.price,
+        checkIn,
+        checkOut,
+        guests,
+      });
+      setBookingSuccess(true);
+       setTimeout(() => {
+      navigate("/my-bookings");
+    }, 900);
+    } catch (err) {
+      setBookingError(err.message);
+    } finally {
+      setBookingLoading(false);
     }
   };
-  
-  setBookingLoading(true);
-
-  try{
-await createBooking({
-  hotelId: String(hotel.id),
-  hotelName: hotel.name,
-  hotelLocation: hotel.location,
-  hotelThumbnail:hotel.thumbnail,
-  pricePerNight:hotel.price,
-  checkIn,checkOut,guests
-})
-  } 
-  catch(err){
-setBookingError(err.message);
-  }
-
-  setBookingLoading(false);
-}
 
 
   return (
@@ -272,7 +273,7 @@ setBookingError(err.message);
 
 
           <label className="sidebarLabel">Guests</label>
-<select value={guests} onChange={(e) => setGuests(e.target.value)}>
+<select value={guests} onChange={(e) => setGuests(Number(e.target.value))}>
   <option value="1">1 guest</option>
   <option value="2">2 guests</option>
   <option value="3">3 guests</option>
@@ -281,10 +282,8 @@ setBookingError(err.message);
   <option value="6">6 guests</option>
 </select>
 
-
-{bookingError && <p className="auth-error">{bookingError}</p>}
-{bookingSuccess && <p className="booking-success">Booking confirmed!</p>}
-
+{bookingError && <p className="authError">{bookingError}</p>}
+{bookingSuccess && <p className="authSuccess">Booking confirmed!</p>}
 
 <button className="bookNowBtn" onClick={handleBookNow} disabled={bookingLoading}>
   {bookingLoading ? "Booking..." : "Book now"}
@@ -294,8 +293,7 @@ setBookingError(err.message);
       </div>
 
         </div>
-       
-)
+  )
+}
 
-  
 export default HotelDetails

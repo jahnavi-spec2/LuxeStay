@@ -1,13 +1,14 @@
 
-import dns from 'dns';
-dns.setServers(['8.8.8.8', '8.8.4.4']);
-import dotenv from"dotenv";
 
+import dotenv from"dotenv";
+dotenv.config({ path: "./.env" });
 
 import app from "./app.js";
- import connectDB from "./db/index.js"
+import connectDB from "./db/index.js"
 
-dotenv.config({ path: "./.env" });
+
+import dns from 'dns';
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 const Port = process.env.PORT || 3000;
 
 

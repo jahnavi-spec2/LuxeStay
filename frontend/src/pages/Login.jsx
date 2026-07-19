@@ -1,17 +1,18 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { validateEmail } from '../utils/helper';
 import { useAuth } from '../context/AuthContext';
 
-
 function Login() {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState('');
   const [isShowPassword, setIsShowPassword] = useState(false);
- const { login } = useAuth();
+  const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
   const togglePasswordVisibility = () => setIsShowPassword((prev) => !prev);
 
   const handleLogin = async (e) => {
@@ -25,19 +26,17 @@ function Login() {
       setError("Invalid email");
       return;
     }
-    
-    // alert("Login request sent for " + username);
 
-  setLoading(true);
+    setLoading(true);
     try {
       await login({ email, username, password });
       const redirectTo = location.state?.from || "/";
       navigate(redirectTo);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
- setLoading(false);
-
   };
 
   return (
@@ -72,8 +71,9 @@ function Login() {
             </button>
           </div>
 
-          <button className="authSubmit" type="submit"disabled={loading}>
-            {loading ? "Logging in..." : "Log In"}</button>
+          <button className="authSubmit" type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Log In"}
+          </button>
         </form>
 
         <p className="authSwitch">
