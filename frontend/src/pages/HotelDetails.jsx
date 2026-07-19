@@ -3,7 +3,7 @@ import { FaChevronLeft, FaChevronRight, FaWifi, FaSnowflake, FaParking, FaMapMar
 import {useParams,useNavigate} from "react-router-dom"
 import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
-import { createBooking } from "../utils/api";
+import { createBooking } from "../utils/Api";
 
 const amenities = {
   "Popular with Guests": [

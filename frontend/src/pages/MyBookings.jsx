@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaMapMarkerAlt, FaCalendarAlt, FaUserFriends, FaHotel } from "react-icons/fa";
-import { getMyBooking, cancelBooking } from "../utils/api";
+import { getMyBooking, cancelBooking } from "../utils/Api";
 
 function statusMeta(status) {
   if (status === "cancelled") return { label: "Cancelled", cls: "status-cancelled" };

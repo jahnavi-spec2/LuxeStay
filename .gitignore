@@ -1,0 +1,12 @@
+# Temporary tunnel files
+temp_key
+temp_key.pub
+localhost_run.txt
+lt_output.txt
+pinggy_output.txt
+
+# Dependency and build directories
+node_modules/
+backend/public/
+.env
+backend/.env
