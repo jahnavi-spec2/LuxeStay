@@ -10,7 +10,7 @@ import Signup from './pages/Signup';
 import MyBookings from './pages/MyBookings';
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./navBar";
-import Footer from  "./Footer"
+import Footer from  "./footer"
 function App() {
 
   const [hotels, setHotels] = useState([]);
