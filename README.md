@@ -1,11 +1,11 @@
 
 
 Readme · MD
-# GoHotel Prudence 🏨
+# LuxeStay 🏨
  
 A full-stack hotel booking web app — browse hotels, filter by location, sort by price/rating, view detailed listings, and book stays with secure, cookie-based authentication.
  
-**Live demo:** _add your deployed link here_
+**Live demo:** https://luxestay-z5vq.onrender.com/
  
 ---
  
@@ -26,7 +26,7 @@ A full-stack hotel booking web app — browse hotels, filter by location, sort b
 ## Project Structure
  
 ```
-gohotel-prudence/
+LuxeStay/
 ├── frontend/          # React + Vite app
 │   ├── src/
 │   │   ├── pages/         # Home, HotelDetails, Login, Signup, MyBookings
@@ -61,8 +61,8 @@ gohotel-prudence/
 ### 1. Clone & install
  
 ```bash
-git clone <your-repo-url>
-cd gohotel-prudence
+git clone <https://github.com/jahnavi-spec2/LuxeStay.git>
+cd LuxeStay
  
 cd backend && npm install
 cd ../frontend && npm install
@@ -73,7 +73,7 @@ cd ../frontend && npm install
 **`backend/.env`**
 ```env
 PORT=8001
-MONGO_URI=mongodb://localhost:27017/gohotel      # or your MongoDB Atlas URI
+MONGO_URI=mongodb://localhost:27017/goHotel     # or your MongoDB Atlas URI
 ACCESS_TOKEN_SECRET=your_long_random_secret_here
 ACCESS_TOKEN_EXPIRY=1d
 CORS_ORIGIN=http://localhost:5173

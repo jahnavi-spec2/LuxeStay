@@ -28,7 +28,7 @@ function Navbar() {
 
       <Link to="/" className="logo">
         <FaHotel />
-        <span>GoHotel</span>
+        <span>LUXESTAY</span>
       </Link>
 
       <div className="nav-links">

@@ -42,8 +42,8 @@ function Login() {
   return (
     <div className="authContainer">
       <div className="authCard">
-        <p className="authBrand">HOTEL PRUDENCE</p>
-        <p className="authTitle">Log in to manage your stays</p>
+        <p className="authBrand">LuxeStay</p>
+        <p className="authTitle">Log in to book your stays</p>
 
         <form onSubmit={handleLogin}>
           {error && <div className="authError">{error}</div>}

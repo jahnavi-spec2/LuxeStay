@@ -54,7 +54,7 @@ function Signup() {
   return (
     <div className="authContainer">
       <div className="authCard">
-        <p className="authBrand">HOTEL PRUDENCE</p>
+        <p className="authBrand">LUXESTAY</p>
         <p className="authTitle">Create your account</p>
 
         <form onSubmit={handleSignup}>

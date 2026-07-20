@@ -135,7 +135,7 @@ return (
         <button className="hero-btn"
         onClick={onExplore}
         >
-          EXPLORE HOTEL PRUDENCE
+          EXPLORE LUXESTAY
         </button>
       </div>
     </div>
