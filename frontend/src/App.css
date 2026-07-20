@@ -487,7 +487,7 @@ background-color: gold;
 }
 
 .amenity-section li{
-    width:250px;
+    width: auto;
     font-size:16px;
 }
 
@@ -1331,6 +1331,19 @@ overflow:hidden;
     margin-top: 30px;
     width: 100%;
     box-sizing: border-box;
+  }
+
+  /* Details page image slider height */
+  .hotelDetailImg {
+    height: 220px;
+  }
+
+  /* Hide thumbnail scrollbar for clean premium design */
+  .gridHotelImg {
+    scrollbar-width: none;
+  }
+  .gridHotelImg::-webkit-scrollbar {
+    display: none;
   }
 
   /* Text overflow wrapping */
