@@ -530,6 +530,7 @@ overflow:hidden;
 
 
 .hotelDetailImg img {
+  width: 100%;
   border-radius: 12px;
   max-height: 420px;
   object-fit: cover;
