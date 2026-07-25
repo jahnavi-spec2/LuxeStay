@@ -9,7 +9,7 @@ function Footer() {
         <div className="footerCol">
           <Link to="/" className="footerLogo">
             <FaHotel />
-            <span>GoHotel</span>
+            <span>LuxeStay</span>
           </Link>
           <p className="footerTagline">
             Curated stays, honest prices, and a booking experience that
@@ -55,7 +55,7 @@ function Footer() {
       </div>
 
       <div className="footerBottom">
-        <p>© {new Date().getFullYear()} GoHotel Prudence. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} LuxeStay. All rights reserved.</p>
       </div>
     </footer>
   );

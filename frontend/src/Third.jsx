@@ -10,6 +10,7 @@ export function ProductListing({filteredHotels}){
        {  filteredHotels.map((el) => (  
             <Hotels 
             key={el.id}
+            
             id={el.id}
             name={el.name} 
             thumbnail={el.thumbnail}

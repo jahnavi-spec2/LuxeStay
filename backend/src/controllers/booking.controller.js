@@ -3,7 +3,6 @@ import asyncHandler from "../utils/AsyncHandler.js";
 import ApiError from "../utils/Apierror.js";
 import ApiResponse from "../utils/Apiresponse.js";
 
-// Helper: number of nights between two dates (min 1)
 function nightsBetween(checkIn, checkOut) {
   const msPerNight = 1000 * 60 * 60 * 24;
   const diff = new Date(checkOut) - new Date(checkIn);
