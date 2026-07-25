@@ -16,6 +16,7 @@ function App() {
   const [hotels, setHotels] = useState([]);
   const [currentLocation, setCurrentLocation] = useState("All");
   const [sortBy, setSortBy] = useState("default");
+  const [searchTerm,setSearchTerm]= useState(" ");
 
   const [currentPage, setCurrentPage] = useState(1);
   const hotelsPerPage = 6;
@@ -31,10 +32,14 @@ function App() {
     fetchHotels();
   }, []);
 
-  const filteredHotels =
-    currentLocation === "All"
-      ? hotels
-      : hotels.filter(hotel => hotel.location === currentLocation);
+  const filteredHotels =hotels.filter((hotel)=>{ 
+     const matchedLocation=currentLocation === "All" || hotel.location==currentLocation
+    const q=searchTerm.trim().toLowerCase();
+
+    const matchsearch=q===" "|| hotel.name.toLowerCase().includes(q) || hotel.location.toLowerCase().includes(q);
+    return matchedLocation && matchsearch
+  });
+
 
   const sortedHotels = [...filteredHotels].sort((a, b) => {
     switch (sortBy) {
@@ -77,6 +82,9 @@ function App() {
             paginatedHotels={paginatedHotels}
             sortBy={sortBy}
             setSortBy={setSortBy}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+             resultsCount={sortedHotels.length}
           />}/>
 
         <Route path="/hotel/:id" element={

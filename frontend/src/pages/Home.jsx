@@ -6,7 +6,7 @@ import { Pagination } from "../Pagination";
 function Home({
   hotels, currentLocation, setCurrentLocation,
   currentPage, setCurrentPage, totalPages, paginatedHotels,
-  sortBy, setSortBy
+  sortBy, setSortBy,searchTerm, setSearchTerm, resultsCount
 }) {
 
   const hotelSectionRef = useRef(null);
@@ -29,8 +29,23 @@ function Home({
 
         <SortBar sortBy={sortBy} setSortBy={setSortBy} setCurrentPage={setCurrentPage} />
 
-        <ProductListing filteredHotels={paginatedHotels} />
 
+{hotelsLoading ? (
+          <div className="hotel-grid">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div className="bookingSkeleton" key={n} style={{ height: 340 }} />
+            ))}
+          </div>
+        ) : paginatedHotels.length === 0 ? (
+          <div className="noResults">
+            <h3>No hotels match your search</h3>
+            <p>Try a different name, location, or clear your filters.</p>
+          </div>
+        ) : (
+        <ProductListing filteredHotels={paginatedHotels} />
+        )}
+
+        
         <Pagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

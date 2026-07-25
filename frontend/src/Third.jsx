@@ -191,3 +191,26 @@ export function SortBar({ sortBy, setSortBy, setCurrentPage }) {
     </div>
   );
 }
+
+export function SearchBar({searchTerm,setSearchTerm,setCurrentPage}){
+  return(
+<div className="heroSectionWrap">
+  <div className="heroSearch">
+    <FaSearch classanme="heroSearchIcon"/>
+    <input type="text" placeholder="Search hotels..." value={searchTerm} onChange={(e)=>{
+      setSearchTerm(e.target.value);
+     setCurrentPage=1;
+    }}/>
+
+
+    {searchTerm&& (
+      <button   className="heroSearchClear"
+            onClick={() => setSearchTerm("")}
+            aria-label="Clear search"
+          ></button>
+    )}
+  </div>
+</div>
+
+  )
+}

@@ -46,7 +46,7 @@ function MyBookings() {
       setCancellingId(null);
     }
   };
-
+        
   if (loading) {
     return (
       <div className="myBookingsPage">
