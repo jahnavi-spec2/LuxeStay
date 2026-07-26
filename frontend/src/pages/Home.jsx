@@ -1,15 +1,15 @@
 import React from 'react'
-import { Hero, ProductListing, CategoriesSection, SortBar } from "../Third.jsx";
+import { Hero, ProductListing, CategoriesSection, SortBar,SearchBar } from "../Third.jsx";
 import { useRef } from 'react';
 import { Pagination } from "../Pagination";
 
 function Home({
-  hotels, currentLocation, setCurrentLocation,
+  hotels, hotelsLoading,currentLocation, setCurrentLocation,
   currentPage, setCurrentPage, totalPages, paginatedHotels,
   sortBy, setSortBy,searchTerm, setSearchTerm, resultsCount
 }) {
 
-  const hotelSectionRef = useRef(null);
+  const hotelSectionRef = useRef(null); 
 
   const scrollToHotels = () => {
     hotelSectionRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -18,6 +18,10 @@ function Home({
   return (
     <>
       <Hero hotels={hotels} onExplore={scrollToHotels} />
+
+
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} setCurrentPage={setCurrentPage} />   {/* ← here */}
+
 
       <div ref={hotelSectionRef}>
         <CategoriesSection
@@ -28,7 +32,9 @@ function Home({
         />
 
         <SortBar sortBy={sortBy} setSortBy={setSortBy} setCurrentPage={setCurrentPage} />
-
+   {!hotelsLoading && (
+          <p className="resultsCount">{resultsCount} hotel{resultsCount !== 1 ? "s" : ""} found</p>
+        )}
 
 {hotelsLoading ? (
           <div className="hotel-grid">

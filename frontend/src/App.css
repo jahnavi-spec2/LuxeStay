@@ -1306,7 +1306,6 @@ overflow:hidden;
   .bookingCardImg { width: 100%; height: 160px; }
 }
 
-/* Responsive adjustments for mobile and tablets */
 @media (max-width: 768px) {
   /* Navbar responsiveness */
   .navbar {
@@ -1336,12 +1335,10 @@ overflow:hidden;
     box-sizing: border-box;
   }
 
-  /* Details page image slider height */
   .hotelDetailImg {
     height: 220px;
   }
 
-  /* Hide thumbnail scrollbar for clean premium design */
   .gridHotelImg {
     scrollbar-width: none;
   }
@@ -1349,7 +1346,6 @@ overflow:hidden;
     display: none;
   }
 
-  /* Text overflow wrapping */
   h1, h2, h3, p, span {
     word-break: break-word;
     overflow-wrap: break-word;
@@ -1357,6 +1353,80 @@ overflow:hidden;
   
   /* Details heading scale */
   .titleRow h1 {
-    font-size: 28px !important;
+    font-size: 28px ;
   }
+}
+.heroSectionWrap{
+position:relative;
+width:100%;
+display:flex;
+justify-content: center;
+margin-top:-35px;
+z-index: 10;
+padding:0 20px;
+}
+
+.heroSearch{
+ width:100%;
+ max-width: 640px;
+ background:rgba(29,29,38,0.9);
+ backdrop-filter: blur(16px);
+ border:1px solid rgba(255, 255, 255, 0.1) ;
+ border-radius: 50px;
+  padding: 8px 10px 8px 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+.heroSectionIcon{
+ color: gold;
+  font-size: 15px;
+  
+}
+
+.heroSection input{
+flex:1;
+background: black;
+ color: #fff;
+  border: none;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+   
+  font-size: 14.5px;
+  padding: 10px 0;
+}
+
+
+.heroSearchClear{
+ background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.resultCount{
+ padding: 0 40px;
+  margin: 20px 0 -10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+.noResults {
+  text-align: center;
+  padding: 80px 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Poppins', sans-serif;
+}
+.noResults h3 { color: #fff; margin-bottom: 8px; }
+@media (max-width: 600px) {
+  .heroSearchWrap { margin-top: -28px; }
+  .heroSearch { padding: 6px 8px 6px 18px; }
+  .heroSearch input { font-size: 13.5px; }
+  .resultsCount { padding: 0 15px; }
 }

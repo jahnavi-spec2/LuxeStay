@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import {Routes,Route} from "react-router-dom"
 import { Pagination } from "./Pagination";
-import { ProductListing, Hero, CategoriesSection, SortBar } from './Third';
+import { ProductListing, Hero, CategoriesSection, SortBar,SearchBar } from './Third';
 import Home from "./pages/Home";
 import HotelDetails from "./pages/HotelDetails";
 import Login from './pages/Login';
@@ -15,17 +15,23 @@ function App() {
 
   const [hotels, setHotels] = useState([]);
   const [currentLocation, setCurrentLocation] = useState("All");
+    const [hotelsLoading, setHotelsLoading] = useState(true);
+
   const [sortBy, setSortBy] = useState("default");
-  const [searchTerm,setSearchTerm]= useState(" ");
+  const [searchTerm,setSearchTerm]= useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
   const hotelsPerPage = 6;
 
   async function fetchHotels() {
+        setHotelsLoading(true);
+
     const url = "https://demohotelsapi.pythonanywhere.com/hotels/";
     const res = await fetch(url);
     const data = await res.json();
     setHotels(data.data);
+        setHotelsLoading(false);
+
   }
 
   useEffect(() => {
@@ -33,10 +39,10 @@ function App() {
   }, []);
 
   const filteredHotels =hotels.filter((hotel)=>{ 
-     const matchedLocation=currentLocation === "All" || hotel.location==currentLocation
+     const matchedLocation=currentLocation === "All" || hotel.location===currentLocation
     const q=searchTerm.trim().toLowerCase();
 
-    const matchsearch=q===" "|| hotel.name.toLowerCase().includes(q) || hotel.location.toLowerCase().includes(q);
+    const matchsearch=q===""|| hotel.name.toLowerCase().includes(q) || hotel.location.toLowerCase().includes(q);
     return matchedLocation && matchsearch
   });
 
@@ -56,7 +62,7 @@ function App() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [currentLocation, sortBy]);
+  }, [currentLocation, sortBy,searchTerm]);
 
   const totalPages = Math.ceil(sortedHotels.length / hotelsPerPage);
 
@@ -74,6 +80,7 @@ function App() {
         <Route path="/" element={
           <Home
             hotels={hotels}
+                        hotelsLoading={hotelsLoading}
             currentLocation={currentLocation}
             setCurrentLocation={setCurrentLocation}
             currentPage={currentPage}

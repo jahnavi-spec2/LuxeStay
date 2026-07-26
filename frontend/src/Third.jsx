@@ -1,6 +1,8 @@
 
 import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
+
 
 export function ProductListing({filteredHotels}){
   
@@ -196,21 +198,20 @@ export function SearchBar({searchTerm,setSearchTerm,setCurrentPage}){
   return(
 <div className="heroSectionWrap">
   <div className="heroSearch">
-    <FaSearch classanme="heroSearchIcon"/>
+    <FaSearch className="heroSearchIcon"/>
     <input type="text" placeholder="Search hotels..." value={searchTerm} onChange={(e)=>{
       setSearchTerm(e.target.value);
-     setCurrentPage=1;
+     setCurrentPage(1);
     }}/>
 
 
     {searchTerm&& (
-      <button   className="heroSearchClear"
-            onClick={() => setSearchTerm("")}
-            aria-label="Clear search"
-          ></button>
+      <button  className="heroSearchClear"
+            onClick={() => setSearchTerm("")}  aria-label="Clear search"
+          > x </button>
     )}
   </div>
 </div>
 
-  )
+  );
 }
