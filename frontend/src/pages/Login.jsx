@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { validateEmail } from '../utils/helper';
 import { useAuth } from '../context/AuthContext';
 
-function Login() {
+function Login() { 
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -15,29 +15,10 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const togglePasswordVisibility = () => setIsShowPassword((prev) => !prev);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    if (!password || (!email && !username)) {
-      setError("Please fill in all the fields");
-      return;
-    }
-    if (email && !validateEmail(email)) {
-      setError("Invalid email");
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await login({ email, username, password });
-      const redirectTo = location.state?.from || "/";
-      navigate(redirectTo);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+ <button
+aria-label="Show password">
+👁️
+</button> 
 
   return (
     <div className="authContainer">
