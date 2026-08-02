@@ -78,3 +78,28 @@ export const cancelBooking=(id)=>
     request(`/bookings/${id}/cancel`,{
         method:"PATCH",
     })
+
+
+
+    //...hotels..
+    export const getHotels=(params={})=>{
+const query=new URLSearchParams();
+
+Object.entries(params).forEach(([key,value])=>{
+    if(value!==undefined && value!=null && value!=""){
+    query.set(key,value);
+    }
+    });
+return request(`/hotels?${query.toString()}`,{
+    method:"GET",
+    });
+
+}
+
+export const getHotelById=(id)=>{
+    return request(`/hotels/${id}`,{
+        method:"GET",
+    });
+}
+
+    
