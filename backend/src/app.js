@@ -4,6 +4,7 @@ import authRouter from "./routes/user.routes.js";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/errorHandler.js";
 import bookingRouter from "./routes/booking.routes.js";
+import hotelRouter from "./routes/hotel.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -31,6 +32,7 @@ app.use(cors({
 
 app.use("/api/usersauth", authRouter);
 app.use("/api/bookings", bookingRouter);
+app.use("/api/hotels",hotelRouter);
 
 app.get("/*splat", (req, res, next) => {
     if (req.path.startsWith("/api")) {

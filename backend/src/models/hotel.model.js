@@ -1,4 +1,4 @@
-import monggode from "mongoose";
+import mongoose from "mongoose";
 
 const reviewSchema=new mongoose.Schema({
 userName:{
@@ -52,6 +52,8 @@ const nearByPlaceSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     category: { type: String },
+    image:{type:String},
+    rating: { type: Number, min: 0, max: 5 },
     distanceKm: { type: Number },
   },
   { _id: false }

@@ -1,8 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-    "type": "module",
-
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -13,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "axios": "^1.19.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
@@ -23,6 +23,7 @@
     "mailgen": "^2.0.34",
     "mongoose": "^9.7.4",
     "nodemailer": "^9.0.3",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "seedrandom": "^3.0.5"
   }
 }
