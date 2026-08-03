@@ -5,62 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
 import { createBooking } from "../utils/Api";
 
-const amenities = {
-  "Popular with Guests": [
-    "Housekeeping",
-    "In-room Dining",
-    "Iron/Ironing Board",
-    "Wi-Fi",
-    "Room Service",
-    "Bathroom",
-    "Air Conditioning",
-    "Mineral Water"
-  ],
 
-  "Room Features": [
-    "Charging Points",
-    "Closet",
-    "Seating Area",
-    "Mini Fridge",
-    "Work Desk",
-    "Blackout Curtains",
-    "Telephone"
-  ],
-
-  "Basic Facilities": [
-    "Kettle"
-  ],
-
-  "Childcare": [
-    "Child safety socket covers"
-  ],
-
-  "Safety and Security": [
-    "Electronic Safe"
-  ],
-
-  "Media and Entertainment": [
-    "TV"
-  ],
-
-  "Kitchen and Appliances": [
-    "Refrigerator"
-  ],
-
-  "Bathroom": [
-    "Shaving Mirror",
-    "Hairdryer",
-    "Dental Kit",
-    "Toiletries",
-    "Western Toilet Seat",
-    "Shower Cubicle",
-    "Hot & Cold Water"
-  ],
-
-  "Other Facilities": [
-    "Fan"
-  ]
-};
 
 function ratingLabel(rating) {
   if (rating >= 4.5) return { text: "Excellent", cls: "rating-great" };
@@ -83,12 +28,37 @@ const { user } = useAuth();
   const [bookingError, setBookingError] = useState("");
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const hotel = hotels.find((h) => String(h.id) === id);
-    const [showAllAmenities,setShowAllAmenities]=useState(false);
+  const [selectedRoomType, setSelectedRoomType] = useState(null);
 
+  const [hotel,setHotel]=useState(null);
+  const [loadError,setLoaderror]=useState("");
   useEffect(() => {
+    let cancelled=false;
+    setHotel(null);
+    setLoadeerror("");
     setCurrentIndex(0);
-    setShowAllAmenities(false);
+getHotelByid(id)
+.then((res)=>{
+  if(cancelled)
+    return;
+  setHotel(res.data.hotel);
+  if(res.data.hotel?.rooms?.length>0)
+
+    setSelectedRoomType(res.data.hotel.rooms[0].type);
+})
+.catch((err)=>{
+  if(cancelled){
+    setLoaderror(err.message);
+  }
+
+})
+return ()=>{}
+cancelled=true;
   }, [id]);
+
+  if(LoadError){
+    return <h2 className="authError">{LoadError}</h2>
+  }
 
   if (!hotel) {
   return <h2>Loading...</h2>;
@@ -129,6 +99,16 @@ const { user } = useAuth();
 
     if (new Date(checkOut) <= new Date(checkIn)) {
       setBookingError("Check-out date can't be before check-in");
+      return;
+    }
+
+        if (guests > selectedRoom.capacity) {
+      setBookingError(`${selectedRoom.type} sleeps up to ${selectedRoom.capacity} guests.`);
+      return;
+    }
+
+    if (!selectedRoomType) {
+      setBookingError("Please select a room type.");
       return;
     }
 

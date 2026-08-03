@@ -15,11 +15,24 @@ export const getAllHotels = asyncHandler(async (req, res) => {
     if (maxPrice) filter["priceRange.min"].$lte = Number(maxPrice);
   }
 
+
+  if(search){
+    filter.$text = { $search: search };
+  }
+
+  const sortMap={
+      "price-low": { "priceRange.min": 1 },
+    "price-high": { "priceRange.min": -1 },
+    rating: { rating: -1 },
+  };
+
+   const sortOption = sortMap[sort] || { createdAt: -1 };
+   
   const pageNum = Number(page);
   const limitNum = Number(limit);
   const skip = (pageNum - 1) * limitNum;
 
-  const hotels = await Hotel.find(filter).skip(skip).limit(limitNum).sort({ createdAt: -1 });
+  const hotels = await Hotel.find(filter).skip(skip).limit(limitNum).sort(sortOption);
   const total = await Hotel.countDocuments(filter);
 
   return res.status(200).json(
