@@ -1,15 +1,15 @@
 import React from 'react'
-import { Hero, ProductListing, CategoriesSection, SortBar,SearchBar } from "../Third.jsx";
+import { Hero, ProductListing, CategoriesSection, TrendingDestinations, SortBar, SearchBar } from "../Third.jsx";
 import { useRef } from 'react';
 import { Pagination } from "../Pagination";
 
 function Home({
-  hotels, hotelsLoading,currentLocation, setCurrentLocation,
+  hotels, hotelsLoading, currentCity, setCurrentCity,
   currentPage, setCurrentPage, totalPages, paginatedHotels,
-  sortBy, setSortBy,searchTerm, setSearchTerm, resultsCount
+  sortBy, setSortBy, searchTerm, setSearchTerm, resultsCount
 }) {
 
-  const hotelSectionRef = useRef(null); 
+  const hotelSectionRef = useRef(null);
 
   const scrollToHotels = () => {
     hotelSectionRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -19,24 +19,24 @@ function Home({
     <>
       <Hero hotels={hotels} onExplore={scrollToHotels} />
 
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} setCurrentPage={setCurrentPage} />
 
-      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} setCurrentPage={setCurrentPage} />   {/* ← here */}
-
+      <TrendingDestinations setCurrentCity={setCurrentCity} setCurrentPage={setCurrentPage} />
 
       <div ref={hotelSectionRef}>
         <CategoriesSection
-          hotels={hotels}
-          currentLocation={currentLocation}
-          setCurrentLocation={setCurrentLocation}
+          currentCity={currentCity}
+          setCurrentCity={setCurrentCity}
           setCurrentPage={setCurrentPage}
         />
 
         <SortBar sortBy={sortBy} setSortBy={setSortBy} setCurrentPage={setCurrentPage} />
-   {!hotelsLoading && (
+
+        {!hotelsLoading && (
           <p className="resultsCount">{resultsCount} hotel{resultsCount !== 1 ? "s" : ""} found</p>
         )}
 
-{hotelsLoading ? (
+        {hotelsLoading ? (
           <div className="hotel-grid">
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div className="bookingSkeleton" key={n} style={{ height: 340 }} />
@@ -48,10 +48,9 @@ function Home({
             <p>Try a different name, location, or clear your filters.</p>
           </div>
         ) : (
-        <ProductListing filteredHotels={paginatedHotels} />
+          <ProductListing filteredHotels={paginatedHotels} />
         )}
 
-        
         <Pagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}

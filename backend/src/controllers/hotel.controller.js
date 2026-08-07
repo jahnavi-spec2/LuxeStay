@@ -4,7 +4,7 @@ import ApiError from "../utils/Apierror.js";
 import ApiResponse from "../utils/Apiresponse.js";
 
 export const getAllHotels = asyncHandler(async (req, res) => {
-  const { city, minPrice, maxPrice, minRating, page = 1, limit = 12 } = req.query;
+  const { city, minPrice, maxPrice, minRating, search, sort, page = 1, limit = 12 } = req.query;
 
   const filter = {};
   if (city) filter.city = new RegExp(`^${city}$`, "i");
@@ -15,19 +15,18 @@ export const getAllHotels = asyncHandler(async (req, res) => {
     if (maxPrice) filter["priceRange.min"].$lte = Number(maxPrice);
   }
 
-
-  if(search){
+  if (search) {
     filter.$text = { $search: search };
   }
 
-  const sortMap={
-      "price-low": { "priceRange.min": 1 },
+  const sortMap = {
+    "price-low": { "priceRange.min": 1 },
     "price-high": { "priceRange.min": -1 },
     rating: { rating: -1 },
   };
 
-   const sortOption = sortMap[sort] || { createdAt: -1 };
-   
+  const sortOption = sortMap[sort] || { createdAt: -1 };
+
   const pageNum = Number(page);
   const limitNum = Number(limit);
   const skip = (pageNum - 1) * limitNum;
