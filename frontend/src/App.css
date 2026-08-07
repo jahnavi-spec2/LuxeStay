@@ -362,30 +362,6 @@ background-color: gold;
   color: rgb(195, 185, 185)
 }
 
-
-.leftBtn,
-.rightBtn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.4);
-  border: none;
-  color: white;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.leftBtn { left: 8px; }
-.rightBtn { right: 8px; }
-
-
-
-
 .categories{
   width: 100%;
   display:flex;
@@ -462,125 +438,6 @@ background-color: gold;
     transition:.3s;
 }
 
-.amenities{
-    margin-top:40px;
-}
-
-.amenity-section{
-    margin-bottom:30px;
-}
-
-.amenity-section h3{
-    margin-bottom:10px;
-    color:#3dbaeb;
-    gap:40px;
-}
-
-.amenity-section ul{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content: left;
-    align-items:left;
-    gap:12px 40px;
-    list-style:none;
-    padding:0;
-}
-
-.amenity-section li{
-    width: auto;
-    font-size:16px;
-}
-
-.hotelDetailContent {
-display:flex;
-flex-direction: column;
-}
-
-.hotelDetailImg{
-width:100%;
-height: 400px;
-overflow:hidden;
-
-}
-.hotelDetailImg img{
-  width:100%;
-  height:100%;
-   object-fit: cover;
-}
-.hotelDetail {
-  display: block;
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.hotelDetailLayout {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: 24px;
-  margin-top: 20px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-@media (max-width: 800px) {
-  .hotelDetailLayout {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-.hotelDetailImg img {
-  width: 100%;
-  border-radius: 12px;
-  max-height: 420px;
-  object-fit: cover;
-}
-
-.leftBtn, .rightBtn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-}
-.leftBtn { left: 12px; }
-.rightBtn { right: 12px; }
-
-
-.gridHotelImg {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-  overflow-x: auto;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.imggrid {
-  cursor: pointer;
-  flex-shrink: 0;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 2px solid transparent;
-  opacity: 0.7;
-}
-.imggrid:hover {
-  opacity: 1;
-}
-.imggrid img {
-  display: block;
-  object-fit: cover;
-}
-
-
 .titleRow {
   display: flex;
   justify-content: space-between;
@@ -627,42 +484,12 @@ overflow:hidden;
   color: #f4eded;
 }
 
-.amenity-section {
-  margin-bottom: 14px;
-}
-.amenity-section h3 {
-  font-size: 15px;
-  margin-bottom: 6px;
-}
-.amenity-section ul {
-  padding: 0;
-  margin: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 4px 12px;
-  font-size: 14px;
-  color: #f3ecea;
-}
-
-.toggleAmenities {
-  background: none;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 8px 14px;
-  font-size: 13px;
-  cursor: pointer;
-  margin-top: 12px;
-}
-.toggleAmenities:hover {
-  background: #f5f5f5;
-}
-
 .bookingSidebar {
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   padding: 18px;
   height: fit-content;
-  position: relative;
+  position: sticky;
   top: 20px;
   background: #010e19;
   box-sizing: border-box;
@@ -1335,6 +1162,14 @@ overflow:hidden;
     box-sizing: border-box;
   }
 
+  .sidebarPrice{
+    color: gold;
+  }
+
+  .hotelDetailLayout {
+    grid-template-columns: 1fr;
+  }
+
   .hotelDetailImg {
     height: 220px;
   }
@@ -1429,4 +1264,589 @@ background: black;
   .heroSearch { padding: 6px 8px 6px 18px; }
   .heroSearch input { font-size: 13.5px; }
   .resultsCount { padding: 0 15px; }
+}
+
+/* ============================================================
+   HOTEL DETAILS PAGE — premium redesign
+   Consolidated here (single source of truth). Keeps the site's
+   existing dark background + gold accent; only structure, spacing,
+   and card treatment are new. No colors introduced outside the
+   palette already used elsewhere in this file (gold / #141414 /
+   rgba white borders / status green #6fcf97 / status red #eb5757).
+   ============================================================ */
+
+.hotelDetail {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+/* ---- Gallery ---- */
+.galleryWrap {
+  padding-top: 20px;
+}
+
+.hotelDetailImg {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 480px;
+}
+
+.hotelDetailImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.galleryCounter {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+.leftBtn, .rightBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.leftBtn:hover, .rightBtn:hover {
+  background: gold;
+  color: #111;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.leftBtn { left: 16px; }
+.rightBtn { right: 16px; }
+
+.gridHotelImg {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.imggrid {
+  border-radius: 8px;
+  overflow: hidden;
+  height: 64px;
+  cursor: pointer;
+  opacity: 0.6;
+  border: 2px solid transparent;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.imggrid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.imggrid:hover {
+  opacity: 0.9;
+}
+
+.imggridActive {
+  opacity: 1;
+  border-color: gold;
+}
+
+/* ---- Layout: content + sticky sidebar ---- */
+.hotelDetailLayout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 40px;
+  align-items: start;
+  margin-top: 28px;
+}
+
+.hotelDetailContent {
+  min-width: 0;
+}
+
+/* Sections below the sidebar grid (Nearby, Policies, Reviews) are direct
+   children of .hotelDetail, so they naturally span its full max-width
+   instead of being squeezed by the 340px sidebar column. */
+.hotelDetail > .detailSection {
+  margin-top: 4px;
+}
+
+/* ---- Title row ---- */
+.titleRow h1 {
+  font-size: 30px;
+  margin: 0 0 6px;
+}
+
+.titleRowRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.titleRowRight h3 {
+  margin: 0;
+  color: gold;
+  font-size: 18px;
+}
+
+/* ---- Section shell (shared rhythm across all sections) ---- */
+.detailSection {
+  padding: 32px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sectionTitle {
+  font-size: 20px;
+  margin: 0 0 16px;
+  letter-spacing: 0.2px;
+}
+
+.sectionBody {
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.7;
+  font-size: 15px;
+  margin: 0;
+}
+
+/* ---- Room type cards ---- */
+.roomGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.roomCard {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.roomCard:hover {
+  border-color: rgba(255, 215, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.roomCardSelected {
+  border-color: gold;
+  box-shadow: 0 0 0 1px gold inset;
+}
+
+.roomCardSoldOut {
+  opacity: 0.55;
+}
+
+.roomCardHeader h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.roomCardPrice {
+  margin: 0;
+  color: gold;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.roomCardPrice span {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.roomCardMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.roomCardMeta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.roomMetaAvailable { color: #6fcf97; }
+.roomMetaSoldOut { color: #eb5757; }
+
+.roomCardFeatures {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.roomCardFeatures li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.roomCardFeatures li svg {
+  color: gold;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.selectRoomBtn {
+  margin-top: auto;
+  background: transparent;
+  border: 1px solid gold;
+  color: gold;
+  padding: 9px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.selectRoomBtn:hover:not(:disabled) {
+  background: gold;
+  color: #111;
+}
+
+.selectRoomBtn:disabled {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.35);
+  cursor: not-allowed;
+}
+
+/* ---- Amenities icon grid ---- */
+.amenityGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.amenityGridItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.amenityGridItem:hover {
+  border-color: gold;
+  transform: translateY(-2px);
+}
+
+.amenityIcon {
+  color: gold;
+  font-size: 16px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* ---- Nearby — single flat horizontal slider ---- */
+.nearbySlider {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+  margin: 0 -4px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.nearbySlider::-webkit-scrollbar {
+  display: none;
+}
+
+.nearbyCard {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: .3s;
+  flex: 0 0 auto;
+  width: 240px;
+  scroll-snap-align: start;
+}
+
+.nearbyCard:hover {
+     transform:translateY(-6px);
+    border-color:#D4AF37;
+    box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+
+.nearbyCardImg {
+  position: relative;
+  height: 160px;
+      overflow:hidden;
+
+}
+
+.nearbyCardImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+   transition:.45s;
+}
+.nearbyCard:hover img{
+    transform:scale(1.08);
+}
+
+.nearbyCategoryTag {
+  position:absolute;
+    top:12px;
+    left:12px;
+
+    background:rgba(255,255,255,.92);
+    color:#111;
+
+    padding:6px 12px;
+    border-radius:20px;
+
+    font-size:11px;
+    font-weight:600;
+}
+
+.nearbyCardBody {
+  padding: 10px 12px 12px;
+}
+
+.nearbyCardName {
+   font-size:17px;
+    font-weight:600;
+    margin-bottom:8px
+}
+
+.nearbyCardMeta {
+  margin: 0;
+  display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    color:#a3a3a3;
+    font-size:13px;}
+
+.starIcon {
+  color: gold;
+  font-size: 11px;
+}
+
+/* ---- Policies ---- */
+.policyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.policyCard {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 18px 14px;
+  text-align: center;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.policyCard:hover {
+  border-color: gold;
+  transform: translateY(-2px);
+}
+
+.policyCardIcon {
+  font-size: 20px;
+  color: gold;
+  margin-bottom: 10px;
+}
+
+.policyCardLabel {
+  margin: 0 0 4px;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.policyCardValue {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.iconYes, .textYes { color: #6fcf97; }
+.iconNo, .textNo { color: #eb5757; }
+
+/* ---- Reviews ---- */
+.reviewList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.reviewCard {
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s ease;
+}
+
+.reviewCard:hover {
+  border-color: rgba(255, 215, 0, 0.35);
+}
+
+.reviewCardTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reviewAvatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, gold, #b8860b);
+  color: #111;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.reviewCardMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.reviewName {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: #6fcf97;
+  background: rgba(111, 207, 151, 0.1);
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+
+.reviewDate {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.reviewStars {
+  font-size: 13px;
+  color: gold;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.reviewComment {
+  margin: 0;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+}
+
+.helpfulBtn {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.helpfulBtn:hover {
+  border-color: gold;
+  color: gold;
+}
+
+.helpfulBtnActive {
+  border-color: gold;
+  color: gold;
+  background: rgba(255, 215, 0, 0.08);
+}
+
+/* ---- Hotel Details — final responsive collapse ---- */
+@media (max-width: 480px) {
+  .titleRow {
+    flex-direction: column;
+  }
+
+  .titleRowRight {
+    align-items: flex-start;
+  }
+
+  .nearbyCard {
+    width: 200px;
+  }
+
+  .roomGrid, .amenityGrid, .policyGrid, .reviewList {
+    grid-template-columns: 1fr;
+  }
 }

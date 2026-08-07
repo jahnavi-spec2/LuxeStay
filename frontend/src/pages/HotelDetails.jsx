@@ -1,5 +1,10 @@
 import React from 'react'
-import { FaChevronLeft, FaChevronRight, FaMapMarkerAlt } from "react-icons/fa";
+import {
+  FaChevronLeft, FaChevronRight, FaMapMarkerAlt, FaWifi, FaParking,
+  FaSwimmingPool, FaSpa, FaDog, FaUtensils, FaConciergeBell, FaSnowflake,
+  FaShuttleVan, FaTshirt, FaClock, FaCheckCircle, FaUsers, FaBed,
+  FaCalendarCheck, FaBan, FaSmokingBan, FaThumbsUp, FaCheckDouble, FaStar
+} from "react-icons/fa";
 import { useParams, useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
@@ -10,6 +15,35 @@ function ratingLabel(rating) {
   if (rating >= 3.5) return { text: "Very Good", cls: "rating-good" };
   if (rating >= 2.5) return { text: "Average", cls: "rating-avg" };
   return { text: "Below Average", cls: "rating-low" };
+}
+
+const AMENITY_ICONS = {
+  "free wifi": <FaWifi />,
+  "wifi": <FaWifi />,
+  "free parking": <FaParking />,
+  "parking": <FaParking />,
+  "pool": <FaSwimmingPool />,
+  "swimming pool": <FaSwimmingPool />,
+  "spa": <FaSpa />,
+  "pet friendly": <FaDog />,
+  "restaurant": <FaUtensils />,
+  "room service": <FaConciergeBell />,
+  "air conditioning": <FaSnowflake />,
+  "airport shuttle": <FaShuttleVan />,
+  "laundry service": <FaTshirt />,
+  "24-hour front desk": <FaClock />,
+};
+
+function getAmenityIcon(name) {
+  return AMENITY_ICONS[name?.toLowerCase().trim()] || <FaCheckCircle />;
+}
+
+function initials(name) {
+  if (!name) return "?";
+  const parts = name.trim().split(" ");
+  return parts.length > 1
+    ? (parts[0][0] + parts[1][0]).toUpperCase()
+    : parts[0].slice(0, 2).toUpperCase();
 }
 
 function HotelDetails() {
@@ -24,6 +58,7 @@ function HotelDetails() {
   const [bookingError, setBookingError] = useState("");
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [selectedRoomType, setSelectedRoomType] = useState(null);
+  const [helpfulVotes, setHelpfulVotes] = useState({});
 
   const [hotel, setHotel] = useState(null);
   const [loadError, setLoadError] = useState("");
@@ -67,12 +102,18 @@ function HotelDetails() {
 
   const rating = ratingLabel(hotel.rating);
 
-  const nearByCategories = (hotel.nearBy || []).reduce((groups, place) => {
-    const key = place.category || "Nearby";
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(place);
-    return groups;
-  }, {});
+  const scrollToSidebar = () => {
+    document.querySelector(".bookingSidebar")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
+  const handleSelectRoom = (type) => {
+    setSelectedRoomType(type);
+    scrollToSidebar();
+  };
+
+  const toggleHelpful = (i) => {
+    setHelpfulVotes((prev) => ({ ...prev, [i]: !prev[i] }));
+  };
 
   const handleBookNow = async () => {
     setBookingError("");
@@ -125,22 +166,33 @@ function HotelDetails() {
 
   return (
     <div className="hotelDetail">
-      <div className="hotelDetailImg" style={{ position: "relative" }}>
-        <img src={images[currentIndex]} width="100%" alt={hotel.name} />
-        <button className="leftBtn" onClick={previousImage}><FaChevronLeft /></button>
-        <button className="rightBtn" onClick={nextImage}><FaChevronRight /></button>
-      </div>
 
-      <div className="gridHotelImg">
-        {images.map((image, i) => (
-          <div className="imggrid" key={i} onClick={() => setCurrentIndex(i)}>
-            <img src={image} width={"90px"} height={"60px"} alt={`${hotel.name} ${i + 1}`} />
-          </div>
-        ))}
+      {/* ---------- GALLERY ---------- */}
+      <div className="galleryWrap">
+        <div className="hotelDetailImg">
+          <img src={images[currentIndex]} alt={hotel.name} />
+          <button className="leftBtn" onClick={previousImage} aria-label="Previous photo"><FaChevronLeft /></button>
+          <button className="rightBtn" onClick={nextImage} aria-label="Next photo"><FaChevronRight /></button>
+          <span className="galleryCounter">{currentIndex + 1} / {images.length}</span>
+        </div>
+
+        <div className="gridHotelImg">
+          {images.map((image, i) => (
+            <div
+              className={`imggrid ${i === currentIndex ? "imggridActive" : ""}`}
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+            >
+              <img src={image} alt={`${hotel.name} ${i + 1}`} />
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="hotelDetailLayout">
         <div className="hotelDetailContent">
+
+          {/* ---------- TITLE / SUMMARY ---------- */}
           <div className="titleRow">
             <div>
               <h1>{hotel.name}</h1>
@@ -148,8 +200,10 @@ function HotelDetails() {
                 <FaMapMarkerAlt /> {hotel.city}{hotel.state ? `, ${hotel.state}` : ""}
               </p>
             </div>
-            <h3>From Rs {hotel.priceRange.min}/night</h3>
-            <span className={`ratingBadge ${rating.cls}`}>{hotel.rating} ⭐ {rating.text}</span>
+            <div className="titleRowRight">
+              <span className={`ratingBadge ${rating.cls}`}>{hotel.rating} ⭐ {rating.text}</span>
+              <h3>From Rs {hotel.priceRange.min}/night</h3>
+            </div>
           </div>
 
           <div className="quickAmenities">
@@ -158,99 +212,75 @@ function HotelDetails() {
             ))}
           </div>
 
-          <hr />
-          <h2>More Information</h2>
-          <p>{hotel.description}</p>
-          <hr />
+          <section className="detailSection">
+            <h2 className="sectionTitle">About this stay</h2>
+            <p className="sectionBody">{hotel.description}</p>
+          </section>
 
-          <div className="amenities">
-            <h2>Room types</h2>
-            {hotel.rooms.map((room) => (
-              <div key={room.type} className="amenity-section">
-                <h3>{room.type} — Rs {room.pricePerNight}/night</h3>
-                <p style={{ margin: "0 0 4px", fontSize: "13px", color: "rgba(255,255,255,0.6)" }}>
-                  Sleeps {room.capacity} · {room.availableRooms > 0 ? `${room.availableRooms} rooms left` : "Fully booked"}
-                </p>
-                <ul>
-                  {room.amenities.map((a) => <li key={a}>• {a}</li>)}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          <hr />
-
-          <div className="amenities">
-            <h2>All amenities</h2>
-            <ul>
-              {(hotel.amenities || []).map((a) => <li key={a}>• {a}</li>)}
-            </ul>
-          </div>
-
-          {hotel.nearBy && hotel.nearBy.length > 0 && (
-            <>
-              <hr />
-              <div className="amenities">
-                <h2>What's nearby</h2>
-                {Object.entries(nearByCategories).map(([category, places]) => (
-                  <div key={category} className="amenity-section">
-                    <h3 style={{ textTransform: "capitalize" }}>{category}</h3>
-                    <div style={{ display: "flex", gap: "12px", overflowX: "auto", paddingBottom: "6px" }}>
-                      {places.map((place) => (
-                        <div key={place.name} style={{ minWidth: "150px", flexShrink: 0 }}>
-                          <img
-                            src={place.image}
-                            alt={place.name}
-                            width="150"
-                            height="90"
-                            style={{ objectFit: "cover", borderRadius: "8px", display: "block" }}
-                          />
-                          <p style={{ fontSize: "13px", margin: "6px 0 2px", fontWeight: 500 }}>{place.name}</p>
-                          <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)", margin: 0 }}>
-                            {place.distanceKm} km · {place.rating} ⭐
-                          </p>
-                        </div>
-                      ))}
+          {/* ---------- ROOM TYPES ---------- */}
+          <section className="detailSection">
+            <h2 className="sectionTitle">Room types</h2>
+            <div className="roomGrid">
+              {hotel.rooms.map((room) => {
+                const isSelected = room.type === selectedRoomType;
+                const soldOut = room.availableRooms === 0;
+                return (
+                  <div
+                    key={room.type}
+                    className={`roomCard ${isSelected ? "roomCardSelected" : ""} ${soldOut ? "roomCardSoldOut" : ""}`}
+                  >
+                    <div className="roomCardHeader">
+                      <h3>{room.type}</h3>
+                      <p className="roomCardPrice">Rs {room.pricePerNight}<span>/night</span></p>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
 
-          <hr />
-          <div className="amenities">
-            <h2>Policies</h2>
-            <ul>
-              <li>• Check-in: {hotel.policies.checkInTime}</li>
-              <li>• Check-out: {hotel.policies.checkOutTime}</li>
-              <li>• {hotel.policies.cancellation}</li>
-              <li>• Pets {hotel.policies.petsAllowed ? "allowed" : "not allowed"}</li>
-              <li>• Smoking {hotel.policies.smokingAllowed ? "allowed" : "not allowed"}</li>
-            </ul>
-          </div>
+                    <div className="roomCardMeta">
+                      <span><FaUsers /> Sleeps {room.capacity}</span>
+                      <span className={soldOut ? "roomMetaSoldOut" : "roomMetaAvailable"}>
+                        <FaBed /> {soldOut ? "Fully booked" : `${room.availableRooms} left`}
+                      </span>
+                    </div>
 
-          {hotel.reviews && hotel.reviews.length > 0 && (
-            <>
-              <hr />
-              <div className="amenities">
-                <h2>Reviews ({hotel.reviewCount})</h2>
-                {hotel.reviews.slice(0, 5).map((rev, i) => (
-                  <div key={i} className="amenity-section">
-                    <h3>{rev.userName} — {rev.rating} ⭐</h3>
-                    <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)" }}>{rev.comment}</p>
+                    <ul className="roomCardFeatures">
+                      {room.amenities.slice(0, 4).map((a) => (
+                        <li key={a}>{getAmenityIcon(a)} {a}</li>
+                      ))}
+                    </ul>
+
+                    <button
+                      className="selectRoomBtn"
+                      disabled={soldOut}
+                      onClick={() => handleSelectRoom(room.type)}
+                    >
+                      {soldOut ? "Unavailable" : isSelected ? "Selected" : "Select Room"}
+                    </button>
                   </div>
-                ))}
-              </div>
-            </>
-          )}
+                );
+              })}
+            </div>
+          </section>
+
+          {/* ---------- AMENITIES ---------- */}
+          <section className="detailSection">
+            <h2 className="sectionTitle">All amenities</h2>
+            <div className="amenityGrid">
+              {(hotel.amenities || []).map((a) => (
+                <div className="amenityGridItem" key={a}>
+                  <span className="amenityIcon">{getAmenityIcon(a)}</span>
+                  <span>{a}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+
         </div>
 
+        {/* ---------- BOOKING SIDEBAR (sticky within the two-column area only) ---------- */}
         <aside className="bookingSidebar">
           <label className="sidebarLabel">Room type</label>
           <select value={selectedRoomType || ""} onChange={(e) => setSelectedRoomType(e.target.value)}>
             {hotel.rooms.map((room) => (
-              <option key={room.type} value={room.type}>
+              <option key={room.type} value={room.type} style={{ background: '#f8f8f8', color: '#070707' }}>
                 {room.type} — Rs {room.pricePerNight}/night
               </option>
             ))}
@@ -269,7 +299,9 @@ function HotelDetails() {
           <label className="sidebarLabel">Guests</label>
           <select value={guests} onChange={(e) => setGuests(Number(e.target.value))}>
             {Array.from({ length: selectedRoom.capacity }, (_, i) => i + 1).map((n) => (
-              <option key={n} value={n}>{n} guest{n > 1 ? "s" : ""}</option>
+              <option key={n} value={n} style={{ background: '#f8f8f8', color: '#070707' }}>
+                {n} guest{n > 1 ? "s" : ""}
+              </option>
             ))}
           </select>
 
@@ -281,6 +313,102 @@ function HotelDetails() {
           </button>
         </aside>
       </div>
+
+      {/* ---------- FULL-WIDTH SECTIONS (outside the sidebar grid) ---------- */}
+
+      {/*  NEARBY — single flat slider, no category grouping */}
+      {hotel.nearBy && hotel.nearBy.length > 0 && (
+        <section className="detailSection">
+          <h2 className="sectionTitle">What's nearby</h2>
+          <div className="nearbySlider">
+            {hotel.nearBy.map((place, i) => (
+              <div key={`${place.name}-${i}`} className="nearbyCard">
+                <div className="nearbyCardImg">
+                  <img src={place.image} alt={place.name} loading="lazy" />
+                  {place.category && (
+                    <span className="nearbyCategoryTag">{place.category}</span>
+                  )}
+                </div>
+                <div className="nearbyCardBody">
+                  <p className="nearbyCardName">{place.name}</p>
+                  <p className="nearbyCardMeta">
+                    <span>{place.distanceKm} km</span>
+                    <span><FaStar className="starIcon" /> {place.rating}</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* POLICIES -- */}
+      <section className="detailSection">
+        <h2 className="sectionTitle">Policies</h2>
+        <div className="policyGrid">
+          <div className="policyCard">
+            <FaClock className="policyCardIcon" />
+            <p className="policyCardLabel">Check-in</p>
+            <p className="policyCardValue">{hotel.policies.checkInTime}</p>
+          </div>
+          <div className="policyCard">
+            <FaCalendarCheck className="policyCardIcon" />
+            <p className="policyCardLabel">Check-out</p>
+            <p className="policyCardValue">{hotel.policies.checkOutTime}</p>
+          </div>
+          <div className="policyCard">
+            <FaCheckCircle className="policyCardIcon" />
+            <p className="policyCardLabel">Cancellation</p>
+            <p className="policyCardValue">{hotel.policies.cancellation}</p>
+          </div>
+          <div className="policyCard">
+            <FaDog className={`policyCardIcon ${hotel.policies.petsAllowed ? "iconYes" : "iconNo"}`} />
+            <p className="policyCardLabel">Pets</p>
+            <p className={`policyCardValue ${hotel.policies.petsAllowed ? "textYes" : "textNo"}`}>
+              {hotel.policies.petsAllowed ? "Allowed" : "Not allowed"}
+            </p>
+          </div>
+          <div className="policyCard">
+            <FaSmokingBan className={`policyCardIcon ${hotel.policies.smokingAllowed ? "iconYes" : "iconNo"}`} />
+            <p className="policyCardLabel">Smoking</p>
+            <p className={`policyCardValue ${hotel.policies.smokingAllowed ? "textYes" : "textNo"}`}>
+              {hotel.policies.smokingAllowed ? "Allowed" : "Not allowed"}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {hotel.reviews && hotel.reviews.length > 0 && (
+        <section className="detailSection">
+          <h2 className="sectionTitle">Reviews ({hotel.reviewCount})</h2>
+          <div className="reviewList">
+            {hotel.reviews.slice(0, 5).map((rev, i) => (
+              <div key={i} className="reviewCard">
+                <div className="reviewCardTop">
+                  <div className="reviewAvatar">{initials(rev.userName)}</div>
+                  <div className="reviewCardMeta">
+                    <p className="reviewName">
+                      {rev.userName}
+                      <span className="verifiedBadge"><FaCheckDouble /> Verified stay</span>
+                    </p>
+                    <p className="reviewDate">
+                      {rev.date ? new Date(rev.date).toLocaleDateString("en-IN", { month: "short", year: "numeric" }) : ""}
+                    </p>
+                  </div>
+                  <span className="reviewStars">{rev.rating} <FaStar className="starIcon" /></span>
+                </div>
+                <p className="reviewComment">{rev.comment}</p>
+                <button
+                  className={`helpfulBtn ${helpfulVotes[i] ? "helpfulBtnActive" : ""}`}
+                  onClick={() => toggleHelpful(i)}
+                >
+                  <FaThumbsUp /> {helpfulVotes[i] ? "Marked helpful" : "Helpful"}
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }
