@@ -1134,7 +1134,6 @@ background-color: gold;
 }
 
 @media (max-width: 768px) {
-  /* Navbar responsiveness */
   .navbar {
     flex-direction: column;
     gap: 15px;
@@ -1154,7 +1153,6 @@ background-color: gold;
     margin-top: 5px;
   }
 
-  /* Details page sidebar position */
   .bookingSidebar {
     position: static;
     margin-top: 30px;
@@ -1170,9 +1168,7 @@ background-color: gold;
     grid-template-columns: 1fr;
   }
 
-  .hotelDetailImg {
-    height: 220px;
-  }
+ 
 
   .gridHotelImg {
     scrollbar-width: none;
@@ -1290,7 +1286,7 @@ background: black;
   position: relative;
   border-radius: 16px;
   overflow: hidden;
-  height: 480px;
+  height: clamp(220px, 40vw, 480px);
 }
 
 .hotelDetailImg img {
@@ -1385,9 +1381,7 @@ background: black;
   min-width: 0;
 }
 
-/* Sections below the sidebar grid (Nearby, Policies, Reviews) are direct
-   children of .hotelDetail, so they naturally span its full max-width
-   instead of being squeezed by the 340px sidebar column. */
+/*340px sidebar column. */
 .hotelDetail > .detailSection {
   margin-top: 4px;
 }
@@ -1543,7 +1537,6 @@ background: black;
   cursor: not-allowed;
 }
 
-/* ---- Amenities icon grid ---- */
 .amenityGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -1576,7 +1569,6 @@ background: black;
   align-items: center;
 }
 
-/* ---- Nearby — single flat horizontal slider ---- */
 .nearbySlider {
   display: flex;
   gap: 20px;
@@ -1832,7 +1824,6 @@ background: black;
   background: rgba(255, 215, 0, 0.08);
 }
 
-/* ---- Hotel Details — final responsive collapse ---- */
 @media (max-width: 480px) {
   .titleRow {
     flex-direction: column;

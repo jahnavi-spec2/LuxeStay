@@ -314,9 +314,7 @@ function HotelDetails() {
         </aside>
       </div>
 
-      {/* ---------- FULL-WIDTH SECTIONS (outside the sidebar grid) ---------- */}
 
-      {/*  NEARBY — single flat slider, no category grouping */}
       {hotel.nearBy && hotel.nearBy.length > 0 && (
         <section className="detailSection">
           <h2 className="sectionTitle">What's nearby</h2>
