@@ -7,7 +7,6 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState('');
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -15,10 +14,30 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const togglePasswordVisibility = () => setIsShowPassword((prev) => !prev);
 
- <button
-aria-label="Show password">
-👁️
-</button> 
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if (!password) {
+      setError("Please enter your password.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await login({ email, password });
+      navigate(location.state?.from || "/");
+    } catch (err) {
+      setError(err.message || "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="authContainer">
@@ -29,12 +48,7 @@ aria-label="Show password">
         <form onSubmit={handleLogin}>
           {error && <div className="authError">{error}</div>}
 
-          <div className="authField">
-            <label htmlFor="login-username">Username</label>
-            <input id="login-username" type="text" value={username}
-              onChange={(e) => setUsername(e.target.value)} />
-          </div>
-
+       
           <div className="authField">
             <label htmlFor="login-email">Email</label>
             <input id="login-email" type="email" value={email}

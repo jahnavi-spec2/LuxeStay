@@ -5,6 +5,7 @@ import { getMyBooking, cancelBooking } from "../utils/Api";
 
 function statusMeta(status) {
   if (status === "cancelled") return { label: "Cancelled", cls: "status-cancelled" };
+  if(status==="pending")  return {label:"payment pending", cls:"status-pending"}
   return { label: "Confirmed", cls: "status-confirmed" };
 }
 

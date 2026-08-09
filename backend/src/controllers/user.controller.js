@@ -46,11 +46,11 @@ throw new ApiError(400, "Field is required");
 export const loginUser = asyncHandler(async (req, res) => {
   const { email,username, password } = req.body;
 
-  if (!password.trim() || (!email.trim() && !username.trim())) {
+  if (!password.trim() || (!email.trim() )) {
     throw new ApiError(400, "Email and password are required");
   }
 
-  const user = await User.findOne({$or: [{username},{email}]});
+  const user = await User.findOne({email: email.toLowerCase() });
   if (!user) {
     throw new ApiError(404, "No account found with this email");
   }

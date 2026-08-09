@@ -166,12 +166,12 @@ function HotelDetails() {
  //createBooking deleted no need
 //creates razorpayOrder and a pending bookingon backendin one call
 const orderRes= await createRazorpayOrder({
-  hotelId: Sting(hotel._id),
+  hotelId: String(hotel._id),
   hotelName: hotel.name,
   hotelLocation: hotel.city,
   hotelThumbnail:hotel.thumbnail,
   roomType:selectedRoom.type,
-  pricePerNight:selectedRoom.type,
+  pricePerNight:selectedRoom.pricePerNight,
   checkIn,
   checkOut,
   guests
@@ -230,12 +230,11 @@ const options={
       setBookingLoading(false);
     }
   };
-  
+
   return (
     <div className="hotelDetail">
 
-      {/* ---------- GALLERY ---------- */}
-      <div className="galleryWrap">
+=      <div className="galleryWrap">
         <div className="hotelDetailImg">
           <img src={images[currentIndex]} alt={hotel.name} />
           <button className="leftBtn" onClick={previousImage} aria-label="Previous photo"><FaChevronLeft /></button>
@@ -259,7 +258,6 @@ const options={
       <div className="hotelDetailLayout">
         <div className="hotelDetailContent">
 
-          {/* ---------- TITLE / SUMMARY ---------- */}
           <div className="titleRow">
             <div>
               <h1>{hotel.name}</h1>
