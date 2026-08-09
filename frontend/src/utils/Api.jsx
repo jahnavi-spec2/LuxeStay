@@ -102,4 +102,20 @@ export const getHotelById=(id)=>{
     });
 }
 
+//payments setup routes
+export const createRazorpayOrder = (payload) =>
+    request("/payments/create-order", {
+         method: "POST", 
+         body: JSON.stringify(payload) });
+
+export const verifyRazorpayPayment = (payload) =>
+    request("/payments/verify", { 
+        method: "POST", 
+        body: JSON.stringify(payload) });
+
+export const markPaymentFailed = (payload) =>
+    request("/payments/mark-failed", { 
+        method: "POST",
+         body: JSON.stringify(payload) });
+
     

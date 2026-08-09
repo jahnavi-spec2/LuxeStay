@@ -8,8 +8,8 @@ import {
 import { useParams, useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext";
 import { useState, useEffect } from "react";
-import { createBooking, getHotelById } from "../utils/Api";
-
+import { createBooking, getHotelById,  createRazorpayOrder, verifyRazorpayPayment, markPaymentFailed, } from "../utils/Api";
+// create Booking not in used after payment still just keeping 
 function ratingLabel(rating) {
   if (rating >= 4.5) return { text: "Excellent", cls: "rating-great" };
   if (rating >= 3.5) return { text: "Very Good", cls: "rating-good" };
@@ -45,7 +45,19 @@ function initials(name) {
     ? (parts[0][0] + parts[1][0]).toUpperCase()
     : parts[0].slice(0, 2).toUpperCase();
 }
+// Loads the Razorpay checkout script once, reuses it if already present.
+function loadRazorPayScript(){
+  return new Promise((resolve)=>{
+    if(window.razorpay)
+      return resolve(true);
 
+    const script=document.createElement("script");
+    script.src="https://checkout.razorpay.com/v1/checkout.js";
+     script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script)
+  })
+}
 function HotelDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -142,28 +154,83 @@ function HotelDetails() {
 
     setBookingLoading(true);
     try {
-      await createBooking({
-        hotelId: String(hotel._id),
-        hotelName: hotel.name,
-        hotelLocation: hotel.city,
-        hotelThumbnail: hotel.thumbnail,
-        roomType: selectedRoom.type,
-        pricePerNight: selectedRoom.pricePerNight,
-        checkIn,
-        checkOut,
-        guests,
-      });
+
+      const scriptLoaded= await loadRazorPayScript();
+      if(!scriptLoaded){
+        setBookingError("Couldn't load payment gateway. Check your connection and try again.")
+        setBookingLoading(false);
+        return;
+      }
+    
+
+ //createBooking deleted no need
+//creates razorpayOrder and a pending bookingon backendin one call
+const orderRes= await createRazorpayOrder({
+  hotelId: Sting(hotel._id),
+  hotelName: hotel.name,
+  hotelLocation: hotel.city,
+  hotelThumbnail:hotel.thumbnail,
+  roomType:selectedRoom.type,
+  pricePerNight:selectedRoom.type,
+  checkIn,
+  checkOut,
+  guests
+})
+
+const order=orderRes.order;
+const options={
+  key:import.meta.env.VITE_RAZORPAY_KEY_ID,
+  amount:order.amount,
+  currency:order.currency,
+  name:"LuxeStay",
+   description: `${hotel.name} — ${selectedRoom.type}`,
+   order_id:order.id,
+   prefill:{
+    name:user?.name ,
+    email:user?.email,
+   },
+  theme: { color: "#d4af37" },
+        handler: async (response) => {
+
+ try{ 
+ await verifyRazorpayPayment({
+  razorpay_order_id:response.razorpay_order_id,
+ razorpay_payment_id: response.razorpay_payment_id,
+   razorpay_signature: response.razorpay_signature,
+
+ })
       setBookingSuccess(true);
       setTimeout(() => {
         navigate("/my-bookings");
       }, 900);
     } catch (err) {
-      setBookingError(err.message);
+      setBookingError(err.message || "Payment succeeded but booking failed. Contact support.");
     } finally {
       setBookingLoading(false);
     }
-  };
+  },
+  modal:{
 
+  ondismiss: () => {
+            markPaymentFailed({ razorpay_order_id: order.id }).catch(() => {});
+            setBookingLoading(false);
+          },
+        },
+      };
+ 
+ const razorpayInstance = new window.Razorpay(options);
+      razorpayInstance.on("payment.failed", () => {
+        markPaymentFailed({ razorpay_order_id: order.id }).catch(() => {});
+        setBookingError("Payment failed. Please try again.");
+        setBookingLoading(false);
+      });
+      razorpayInstance.open();
+    } catch (err) {
+      setBookingError(err.message || "Something went wrong starting the payment.");
+      setBookingLoading(false);
+    }
+  };
+  
   return (
     <div className="hotelDetail">
 
