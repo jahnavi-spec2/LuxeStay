@@ -7,6 +7,7 @@ import bookingRouter from "./routes/booking.routes.js";
 import hotelRouter from "./routes/hotel.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import paymentRouter from "./routes/payment.routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,6 +34,7 @@ app.use(cors({
 app.use("/api/usersauth", authRouter);
 app.use("/api/bookings", bookingRouter);
 app.use("/api/hotels",hotelRouter);
+app.use("/api/payments", paymentRouter);
 
 app.get("/*splat", (req, res, next) => {
     if (req.path.startsWith("/api")) {

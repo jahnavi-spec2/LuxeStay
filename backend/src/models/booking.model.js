@@ -27,7 +27,11 @@ const bookingSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-
+    roomType:{
+      type: String,
+      required: true,
+    },
+//booking details....
     checkIn: {
       type: Date,
       required: true,
@@ -53,8 +57,23 @@ const bookingSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["confirmed", "cancelled"],
-      default: "confirmed",
+      enum: ["pending", "confirmed", "cancelled"],
+      default: "pending",
+    },
+
+
+    //payment details....
+    paymentStatus:{
+      type:String,
+      enum:["pending","completed","failed"],
+      default:"pending",
+    },
+
+    razorpayOrderId:{
+      type:String,
+    },
+    razorpayPaymentId:{
+      type:String,
     },
   },
   { timestamps: true }
