@@ -234,7 +234,7 @@ const options={
   return (
     <div className="hotelDetail">
 
-=      <div className="galleryWrap">
+      <div className="galleryWrap">
         <div className="hotelDetailImg">
           <img src={images[currentIndex]} alt={hotel.name} />
           <button className="leftBtn" onClick={previousImage} aria-label="Previous photo"><FaChevronLeft /></button>

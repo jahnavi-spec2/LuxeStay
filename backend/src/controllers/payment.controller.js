@@ -4,14 +4,20 @@ import Booking from "../models/booking.model.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-const instance=new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-})
+const getRazorpayInstance = () => {
+  const key_id = process.env.RAZORPAY_KEY_ID;
+  const key_secret = process.env.RAZORPAY_KEY_SECRET;
+  if (!key_id || !key_secret) {
+    throw new Error(
+      "Razorpay API keys (RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET) are missing in environment variables."
+    );
+  }
+  return new Razorpay({ key_id, key_secret });
+};
 
 async function createRazorpayOrder(req, res) {
-    try{ 
-   const {
+  try {
+    const {
       hotelId,
       hotelName,
       hotelLocation,
@@ -23,14 +29,15 @@ async function createRazorpayOrder(req, res) {
       guests,
       currency = "INR",
     } = req.body;
-          if (!hotelId || !roomType || !pricePerNight || !checkIn || !checkOut || !guests) {
+
+    if (!hotelId || !roomType || !pricePerNight || !checkIn || !checkOut || !guests) {
       return res.status(400).json({
         success: false,
         message: "Booking details are missing",
       });
     }
 
-       const checkInDate = new Date(checkIn);
+    const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
     const totalNights = Math.max(
       1,
@@ -38,13 +45,14 @@ async function createRazorpayOrder(req, res) {
     );
     const totalPrice = totalNights * Number(pricePerNight);
 
-        const order = await instance.orders.create({
-            amount: Math.round(totalPrice * 100), // ₹ → paise
-            currency,
-            receipt:  `booking_{hotel_id}_${Date.now()}`
-        });
+    const instance = getRazorpayInstance();
+    const order = await instance.orders.create({
+      amount: Math.round(totalPrice * 100), // ₹ → paise
+      currency,
+      receipt: `booking_${hotelId}_${Date.now()}`,
+    });
 
-          const booking = await Booking.create({
+    const booking = await Booking.create({
       user: req.user._id,
       hotelId,
       hotelName,
@@ -63,37 +71,40 @@ async function createRazorpayOrder(req, res) {
     });
 
     return res.status(200).json({ success: true, order, bookingId: booking._id });
-
-    } catch (error) {
-        console.error("Error creating Razorpay order:", error);
-        return res.status(500).json({ message: "Something went wrong", error: error.message });
-    }
+  } catch (error) {
+    console.error("Error creating Razorpay order:", error);
+    return res.status(500).json({ message: "Something went wrong", error: error.message });
+  }
 }
 
 const verifyRazorpayPayment = async (req, res) => {
-    try {
-        const { razorpay_order_id, razorpay_payment_id, razorpay_signature} = req.body;
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
-           if ( !razorpay_order_id ||  !razorpay_payment_id ||  !razorpay_signature) {
-            return res.status(400).json({
-                success: false,
-                message: "Payment details are missing"
-            });
-        }
-      
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        message: "Payment details are missing",
+      });
+    }
 
+    if (!process.env.RAZORPAY_KEY_SECRET) {
+      return res.status(500).json({
+        success: false,
+        message: "RAZORPAY_KEY_SECRET is not configured on the server",
+      });
+    }
 
-        const signature=crypto
-        .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-            .update(razorpay_order_id + "|" + razorpay_payment_id)
-            .digest('hex');
+    const signature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(razorpay_order_id + "|" + razorpay_payment_id)
+      .digest("hex");
 
-        if (signature !== razorpay_signature) { 
-            return res.status(400).json({success:false,message:"Payment verification failed"})
-        }
+    if (signature !== razorpay_signature) {
+      return res.status(400).json({ success: false, message: "Payment verification failed" });
+    }
 
-        //if they are same if signatiure is valid ...creating booing finding the id back there now ...
-         const booking = await Booking.findOneAndUpdate(
+    const booking = await Booking.findOneAndUpdate(
       { razorpayOrderId: razorpay_order_id, user: req.user._id },
       {
         status: "confirmed",
@@ -102,44 +113,42 @@ const verifyRazorpayPayment = async (req, res) => {
       },
       { new: true }
     );
-    
+
     if (!booking) {
       return res.status(404).json({ success: false, message: "Booking not found for this order" });
     }
 
-           return res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Payment verified and booking confirmed",
       booking,
     });
-    } catch (error) {
-        console.error("Error verifying Razorpay payment:", error);
-        return res.status(500).json({ message: "Something went wrong", error: error.message });
+  } catch (error) {
+    console.error("Error verifying Razorpay payment:", error);
+    return res.status(500).json({ message: "Something went wrong", error: error.message });
+  }
+};
+
+const markPaymentFailed = async (req, res) => {
+  try {
+    const { razorpay_order_id } = req.body;
+    if (!razorpay_order_id) {
+      return res.status(400).json({
+        success: false,
+        message: "razorpay_order_id is required",
+      });
     }
-}
 
-//a fall back if someone closes app without pAYING MONEY SO STSTUS GET PENDING 
-
-const markPaymentFailed=async(req,res)=>{
-try{
-  const {razorpay_order_id}=req.body;
-  if(!razorpay_order_id)
-    return res.status(400).json({
-success:false,
-message:"razorpay_order_id is required"});
- await Booking.findOneAndUpdate(
+    await Booking.findOneAndUpdate(
       { razorpayOrderId: razorpay_order_id, user: req.user._id, paymentStatus: "pending" },
       { paymentStatus: "failed" }
     );
- 
+
     return res.status(200).json({ success: true });
-
-}catch(error){
-  console.error("Error marking payment failed:", error);
+  } catch (error) {
+    console.error("Error marking payment failed:", error);
     return res.status(500).json({ message: "Something went wrong", error: error.message });
-}
-}
-
-export { createRazorpayOrder, verifyRazorpayPayment , markPaymentFailed
-
+  }
 };
+
+export { createRazorpayOrder, verifyRazorpayPayment, markPaymentFailed };
