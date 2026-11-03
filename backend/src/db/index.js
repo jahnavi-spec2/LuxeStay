@@ -2,8 +2,18 @@ import mongoose from "mongoose";
 import dns from "dns";
 
 const connectDB = async () => {
+  if (!process.env.MONGO_URI) {
+    console.error("❌ MONGO_URI is not set in environment variables!");
+    process.exit(1);
+  }
+
+  const safeHost = process.env.MONGO_URI.includes("@")
+    ? process.env.MONGO_URI.split("@")[1].split("?")[0]
+    : "(malformed URI)";
+  console.log(`Connecting to MongoDB host: ${safeHost}...`);
+
   try {
-    // 1. Try standard system DNS first (works natively on Render and cloud providers)
+    // 1. Try standard connection first (native on Render and cloud providers)
     const conn = await mongoose.connect(process.env.MONGO_URI, {
       serverSelectionTimeoutMS: 5000,
     });
